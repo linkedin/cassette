@@ -10,18 +10,34 @@
 
 /** Initial file size in bytes. */
 #define INITIAL_LENGTH 4096 // one file system block
+/** Length of header in bytes. */
+#define HEADER_LENGTH 16
 
 @interface QueueFile ()
 
 @property (nonatomic, strong, readwrite) NSFileHandle *fileHandle;
+/** In-memory buffer. Big enough to hold the header. */
+@property (nonatomic, strong, readwrite) NSData *buffer;
+
+/** Cached file length. Always a power of 2. */
+@property (nonatomic, readwrite) int fileLength;
+/** Number of elements. */
+@property (nonatomic, readwrite) int elementCount;
 
 @end
 
 @implementation QueueFile
 
 /** Stores an {@code int} in the {@code buffer} at the given {@code offset}. */
-static void writeInt(NSMutableData *buffer, int offset, int value) {
+void writeInt(NSMutableData *buffer, int offset, int value) {
     [buffer replaceBytesInRange:NSMakeRange(offset, 4) withBytes:&value];
+}
+
+/** Reads an {@code int} from the {@code buffer}. */
+int readInt(NSData *buffer, int offset) {
+    int value;
+    [buffer getBytes:&value range:NSMakeRange(offset, 4)];
+    return value;
 }
 
 + (void)initialize:(NSString *)path {
@@ -69,6 +85,11 @@ static void writeInt(NSMutableData *buffer, int offset, int value) {
         self.fileHandle = fileHandle;
     }
     return self;
+}
+
+- (void)readHeader {
+    [self.fileHandle seekToFileOffset:0];
+    NSData *data = [self.fileHandle readDataOfLength:HEADER_LENGTH];
 }
 
 - (void)add:(NSData *)data {
