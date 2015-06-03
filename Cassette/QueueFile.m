@@ -9,20 +9,53 @@
 #import "QueueFile.h"
 
 /** Initial file size in bytes. */
-#define INITIAL_LENGTH 4096 // one file system block
+#define QUEUE_FILE_INITIAL_LENGTH 4096 // one file system block
 /** Length of header in bytes. */
-#define HEADER_LENGTH 16
+#define QUEUE_FILE_HEADER_LENGTH 16
+/** Length of element header in bytes. */
+#define ELEMENT_HEADER_LENGTH 16
+
+@interface Element : NSObject
+
+@property (nonatomic, readwrite) int position;
+@property (nonatomic, readwrite) int length;
+
+@end
+
+@implementation Element
+
+Element *const ELEMENT_NULL = [[Element alloc] initAtPosition:0 withLength:0];
+
+- (instancetype)initAtPosition:(int)position withLength:(int)length {
+    if (self = [super init]) {
+        _position = position;
+        _length = length;
+    }
+    return self;
+}
+
+@end
 
 @interface QueueFile ()
 
+@property (nonatomic, strong, readwrite) NSFileManager *fileManager;
+@property (nonatomic, strong, readwrite) NSString *filePath;
 @property (nonatomic, strong, readwrite) NSFileHandle *fileHandle;
+
 /** In-memory buffer. Big enough to hold the header. */
 @property (nonatomic, strong, readwrite) NSData *buffer;
 
 /** Cached file length. Always a power of 2. */
 @property (nonatomic, readwrite) int fileLength;
+
 /** Number of elements. */
 @property (nonatomic, readwrite) int elementCount;
+
+/** Pointer to first (or eldest) element. */
+@property (nonatomic, readwrite) Element *first;
+
+/** Pointer to last (or newest) element. */
+@property (nonatomic, readwrite) Element *last;
 
 @end
 
@@ -38,6 +71,14 @@ int readInt(NSData *buffer, int offset) {
     int value;
     [buffer getBytes:&value range:NSMakeRange(offset, 4)];
     return value;
+}
+
+/** Returns the size of the while without clobbering the current offset. */
+unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
+    unsigned long long int offsetInFile = fileHandle.offsetInFile;
+    unsigned long long int size = [fileHandle seekToEndOfFile];
+    [fileHandle seekToFileOffset:offsetInFile];
+    return size;
 }
 
 + (void)initialize:(NSString *)path {
@@ -57,11 +98,12 @@ int readInt(NSData *buffer, int offset) {
 
     NSFileHandle *tempFileHandle =
             [NSFileHandle fileHandleForUpdatingAtPath:tempPath];
-    [tempFileHandle truncateFileAtOffset:INITIAL_LENGTH];
+    [tempFileHandle truncateFileAtOffset:QUEUE_FILE_INITIAL_LENGTH];
     [tempFileHandle seekToFileOffset:0];
-    NSMutableData *headerBuffer = [NSMutableData dataWithLength:16];
-    writeInt(headerBuffer, 0, INITIAL_LENGTH);
+    NSMutableData *headerBuffer = [NSMutableData dataWithLength:QUEUE_FILE_HEADER_LENGTH];
+    writeInt(headerBuffer, 0, QUEUE_FILE_INITIAL_LENGTH);
     [tempFileHandle writeData:headerBuffer];
+    [tempFileHandle synchronizeFile]; // It's unclear if closing the file fsync's it as well
     [tempFileHandle closeFile];
 
     [fileManager moveItemAtPath:tempPath toPath:path error:&error];
@@ -76,20 +118,69 @@ int readInt(NSData *buffer, int offset) {
         [QueueFile initialize:path];
     }
 
-    NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:path];
-    return [[self alloc] initWithFileHandle:fileHandle];
+    return [[self alloc] initWithPath:path forManager:fileManager];
 }
 
-- (instancetype)initWithFileHandle:(NSFileHandle *)fileHandle {
+- (instancetype)initWithPath:(NSString *)filePath forManager:(NSFileManager *)fileManager {
     if (self = [super init]) {
-        self.fileHandle = fileHandle;
+        _filePath = filePath;
+        _fileManager = fileManager;
+        _fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
+        [self readHeader];
     }
     return self;
 }
 
 - (void)readHeader {
-    [self.fileHandle seekToFileOffset:0];
-    NSData *data = [self.fileHandle readDataOfLength:HEADER_LENGTH];
+    [_fileHandle seekToFileOffset:0];
+    NSData *buffer = [_fileHandle readDataOfLength:QUEUE_FILE_HEADER_LENGTH];
+
+    _fileLength = readInt(buffer, 0);
+    if (_fileLength > sizeOfFile(_fileHandle)) {
+        // TODO: raise exception
+    } else if (_fileLength <= 0) {
+        // TODO: raise exception
+    }
+
+    _elementCount = readInt(buffer, 4);
+    int firstOffset = readInt(buffer, 8);
+    int lastOffset = readInt(buffer, 12);
+
+    _first = [self readElement:firstOffset];
+    _last = [self readElement:lastOffset];
+}
+
+- (Element *)readElement:(int)position {
+    if (position == 0) {
+        return ELEMENT_NULL;
+    }
+    NSData *buffer = [self ringRead:position count:ELEMENT_HEADER_LENGTH];
+    int length = readInt(buffer, 0);
+    return [[Element alloc] initAtPosition:position withLength:length];
+}
+
+- (NSData *)ringRead:(int)position count:(int)count {
+    position = [self wrapPosition:position];
+
+    if (position + count < _fileLength) {
+        [_fileHandle seekToFileOffset:position];
+        return [_fileHandle readDataOfLength:count];
+    }
+
+    // The read overlaps the EOF.
+    NSMutableData *buffer = [NSMutableData dataWithLength:count];
+    // # of bytes to read before the EOF.
+    int beforeEof = _fileLength - position;
+    [_fileHandle seekToFileOffset:beforeEof];
+    [buffer appendData:[_fileHandle readDataOfLength:beforeEof]];
+    [_fileHandle seekToFileOffset:QUEUE_FILE_HEADER_LENGTH];
+    [buffer appendData:[_fileHandle readDataOfLength:count - beforeEof]];
+    return buffer;
+}
+
+/** Wraps the position if it exceeds the end of the file. */
+- (int)wrapPosition:(int)position {
+    return position < _fileLength ? position : QUEUE_FILE_HEADER_LENGTH + position - _fileLength;
 }
 
 - (void)add:(NSData *)data {
