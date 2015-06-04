@@ -249,16 +249,17 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     if (position + count <= _fileLength) {
         [_fileHandle seekToFileOffset:position];
         [_fileHandle writeData:[buffer subdataWithRange:NSMakeRange(offset, count)]];
-        return;
+    } else {
+        // The write overlaps the EOF.
+        // # of bytes to write before the EOF.
+        int beforeEof = _fileLength - position;
+        [_fileHandle seekToFileOffset:position];
+        [_fileHandle writeData:[buffer subdataWithRange:NSMakeRange(offset, beforeEof)]];
+        [_fileHandle seekToFileOffset:QUEUE_FILE_HEADER_LENGTH];
+        [_fileHandle writeData:[buffer subdataWithRange:NSMakeRange(offset + beforeEof, count - beforeEof)]];
     }
 
-    // The write overlaps the EOF.
-    // # of bytes to write before the EOF.
-    int beforeEof = _fileLength - position;
-    [_fileHandle seekToFileOffset:position];
-    [_fileHandle writeData:[buffer subdataWithRange:NSMakeRange(offset, beforeEof)]];
-    [_fileHandle seekToFileOffset:QUEUE_FILE_HEADER_LENGTH];
-    [_fileHandle writeData:[buffer subdataWithRange:NSMakeRange(offset + beforeEof, count - beforeEof)]];
+    [_fileHandle synchronizeFile];
 }
 
 - (void)writeHeader:(int)fileLength elementCount:(int)elementCount firstPosition:(int)firstPosition lastPosition:(int)lastPosition {
@@ -269,6 +270,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 
     [_fileHandle seekToFileOffset:0];
     [_fileHandle writeData:_buffer];
+    [_fileHandle synchronizeFile];
 }
 
 /** Returns true if this queue contains no entries. */
