@@ -81,6 +81,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     return size;
 }
 
+/** Atomically initializes a new QueueFile at the given path. */
 + (void)initialize:(NSString *)path {
     NSFileManager *fileManager = [NSFileManager defaultManager];
 
@@ -131,6 +132,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     return self;
 }
 
+/** Read the data stored in the header into instance variables. */
 - (void)readHeader {
     [_fileHandle seekToFileOffset:0];
     NSData *buffer = [_fileHandle readDataOfLength:QUEUE_FILE_HEADER_LENGTH];
@@ -183,8 +185,12 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     return position < _fileLength ? position : QUEUE_FILE_HEADER_LENGTH + position - _fileLength;
 }
 
+/** Adds an element to the end of the queue. */
 - (void)add:(NSData *)data {
     [self expandIfNecessary:data.length];
+
+    // Insert a new element after the current last element.
+    BOOL wasEmpty = [self isEmpty];
 }
 
 /** If necessary, expands the file to accommodate an additional element of the given length. */
@@ -214,8 +220,9 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     }
 }
 
+/** Returns true if this queue contains no entries. */
 - (BOOL)isEmpty {
-    return NO;
+    return _elementCount == 0;
 }
 
 - (NSData *)peek {
