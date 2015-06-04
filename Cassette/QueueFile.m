@@ -24,7 +24,11 @@
 
 @implementation Element
 
-Element *const ELEMENT_NULL = [[Element alloc] initAtPosition:0 withLength:0];
+const Element *ELEMENT_NULL = [Element elementAtPosition:0 withLength:0];
+
++ (instancetype)elementAtPosition:(int)position withLength:(int)length {
+    return [[Element alloc] initAtPosition:position withLength:length];
+}
 
 - (instancetype)initAtPosition:(int)position withLength:(int)length {
     if (self = [super init]) {
@@ -41,9 +45,6 @@ Element *const ELEMENT_NULL = [[Element alloc] initAtPosition:0 withLength:0];
 @property (nonatomic, strong, readwrite) NSFileManager *fileManager;
 @property (nonatomic, strong, readwrite) NSString *filePath;
 @property (nonatomic, strong, readwrite) NSFileHandle *fileHandle;
-
-/** In-memory buffer. Big enough to hold the header. */
-@property (nonatomic, strong, readwrite) NSData *buffer;
 
 /** Cached file length. Always a power of 2. */
 @property (nonatomic, readwrite) int fileLength;
@@ -158,7 +159,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     }
     NSData *buffer = [self ringRead:position count:ELEMENT_HEADER_LENGTH];
     int length = readInt(buffer, 0);
-    return [[Element alloc] initAtPosition:position withLength:length];
+    return [Element elementAtPosition:position withLength:length];
 }
 
 - (NSData *)ringRead:(int)position count:(int)count {
@@ -187,10 +188,14 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 
 /** Adds an element to the end of the queue. */
 - (void)add:(NSData *)data {
-    [self expandIfNecessary:data.length];
+    int count = data.length;
+    [self expandIfNecessary:count];
 
     // Insert a new element after the current last element.
     BOOL wasEmpty = [self isEmpty];
+    int position = wasEmpty ? QUEUE_FILE_HEADER_LENGTH
+            : [self wrapPosition:_last.position + ELEMENT_HEADER_LENGTH + _last.length];
+    Element *newLast = [Element elementAtPosition:position withLength:count];
 }
 
 /** If necessary, expands the file to accommodate an additional element of the given length. */
