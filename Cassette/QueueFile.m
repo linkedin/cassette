@@ -24,9 +24,9 @@
 
 @implementation Element
 
-const Element *ELEMENT_NULL = [Element elementAtPosition:0 withLength:0];
+Element *ELEMENT_NULL = [Element atPosition:0 withLength:0];
 
-+ (instancetype)elementAtPosition:(int)position withLength:(int)length {
++ (instancetype)atPosition:(int)position withLength:(int)length {
     return [[Element alloc] initAtPosition:position withLength:length];
 }
 
@@ -64,6 +64,8 @@ const Element *ELEMENT_NULL = [Element elementAtPosition:0 withLength:0];
 @end
 
 @implementation QueueFile
+
+NSData *ZEROES = [NSMutableData dataWithLength:QUEUE_FILE_INITIAL_LENGTH];
 
 /** Stores an {@code int} in the {@code buffer} at the given {@code offset}. */
 void writeInt(NSMutableData *buffer, int offset, int value) {
@@ -157,15 +159,17 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     _last = [self readElement:lastOffset];
 }
 
+/** Reads the element stored at the given position in the file, wrapping around if necessary. */
 - (Element *)readElement:(int)position {
     if (position == 0) {
         return ELEMENT_NULL;
     }
     NSData *buffer = [self ringRead:position count:ELEMENT_HEADER_LENGTH];
     int length = readInt(buffer, 0);
-    return [Element elementAtPosition:position withLength:length];
+    return [Element atPosition:position withLength:length];
 }
 
+/** Reads {@code count} bytes from the given position in the file, wrapping around if necessary. */
 - (NSData *)ringRead:(int)position count:(int)count {
     position = [self wrapPosition:position];
 
@@ -199,7 +203,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     BOOL wasEmpty = [self isEmpty];
     int position = wasEmpty ? QUEUE_FILE_HEADER_LENGTH
             : [self wrapPosition:_last.position + ELEMENT_HEADER_LENGTH + _last.length];
-    Element *newLast = [Element elementAtPosition:position withLength:count];
+    Element *newLast = [Element atPosition:position withLength:count];
 
     // Write length.
     writeInt(_buffer, 0, count);
@@ -221,6 +225,41 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     int elementLength = ELEMENT_HEADER_LENGTH + dataLength;
     int remainingBytes = [self remainingBytes];
     if (remainingBytes >= elementLength) return;
+
+    // Expand.
+    int previousLength = _fileLength;
+    int newLength;
+    // Double the length until we can fit the new data.
+    do {
+        remainingBytes += previousLength;
+        newLength = previousLength << 1;
+        previousLength = newLength;
+    } while (remainingBytes < elementLength);
+
+    [self setLength:newLength];
+
+    // Calculate the position of the tail end of the data in the ring buffer
+    int endOfLastElement = [self wrapPosition:_last.position + ELEMENT_HEADER_LENGTH + _last.length];
+
+    // If the buffer is split, we need to make it contiguous
+    if (endOfLastElement <= _first.position) {
+        int count = endOfLastElement - QUEUE_FILE_HEADER_LENGTH;
+        NSData *buffer = [self ringRead:QUEUE_FILE_HEADER_LENGTH count:count];
+        [_fileHandle seekToFileOffset:_fileLength];
+        [_fileHandle writeData:buffer];
+        [self ringErase:QUEUE_FILE_HEADER_LENGTH length:count];
+    }
+
+    // Commit the expansion.
+    if (_last.position < _first.position) {
+        int newLastPosition = _fileLength + _last.position - QUEUE_FILE_HEADER_LENGTH;
+        [self writeHeader:newLength elementCount:_elementCount firstPosition:_first.position lastPosition:_last.position];
+        _last = [Element atPosition:newLastPosition withLength:_last.length];
+    } else {
+        [self writeHeader:newLength elementCount:_elementCount firstPosition:_first.position lastPosition:_last.position];
+    }
+
+    _fileLength = newLength;
 }
 
 - (int)remainingBytes {
@@ -243,6 +282,10 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     }
 }
 
+/**
+* Writes {@code count} bytes from buffer to position in file. Automatically wraps write if position is
+* past the end of the file or if buffer overlaps it.
+*/
 - (void)ringWrite:(int)position buffer:(NSData *)buffer offset:(int)offset count:(int)count {
     position = [self wrapPosition:position];
 
@@ -262,6 +305,12 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     [_fileHandle synchronizeFile];
 }
 
+/**
+* Writes header atomically. The arguments contain the updated values. The class member fields
+* should not have changed yet. This only updates the state in the file. It's up to the caller to
+* update the class member variables *after* this call succeeds. Assumes segment writes are
+* atomic in the underlying file system.
+*/
 - (void)writeHeader:(int)fileLength elementCount:(int)elementCount firstPosition:(int)firstPosition lastPosition:(int)lastPosition {
     writeInt(_buffer, 0, fileLength);
     writeInt(_buffer, 4, elementCount);
@@ -279,20 +328,89 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 }
 
 - (NSData *)peek {
-    return nil;
+    if ([self isEmpty]) {
+        return NULL;
+    }
+
+    return [self ringRead:_first.position + ELEMENT_HEADER_LENGTH count:_first.length];
 }
 
 - (int)size {
-    return 0;
+    return _elementCount;
 }
 
 - (void)remove {
+    [self remove:1];
 }
 
 - (void)remove:(int)n {
+    if ([self isEmpty]) {
+        // TODO: raise exception
+    }
+    if (n < 0) {
+        // TODO: raise exception
+    }
+    if (n == 0) {
+        // TODO: raise exception
+    }
+    if (n == _elementCount) {
+        [self clear];
+        return;
+    }
+    if (n > _elementCount) {
+        // TODO: raise exception
+    }
+
+    int eraseStartPosition = _first.position;
+    int eraseTotalLength = 0;
+
+    // Read the position and length of the new first element.
+    int newFirstPosition = _first.position;
+    int newFirstLength = _first.length;
+    for (int i = 0; i < n; i++) {
+        eraseTotalLength += ELEMENT_HEADER_LENGTH + newFirstLength;
+        newFirstPosition = [self wrapPosition:newFirstPosition + ELEMENT_HEADER_LENGTH + newFirstLength];
+        NSData *buffer = [self ringRead:newFirstPosition count:ELEMENT_HEADER_LENGTH];
+        newFirstLength = readInt(buffer, 0);
+    }
+
+    // Commit the header.
+    [self writeHeader:_fileLength elementCount:_elementCount - n firstPosition:newFirstPosition lastPosition:_last.position];
+    _elementCount -= n;
+    _first = [Element atPosition:newFirstPosition withLength:newFirstLength];
+
+    // Commit the erase.
+    [self ringErase:eraseStartPosition length:eraseTotalLength];
+}
+
+- (void)ringErase:(int)position length:(int)length {
+    while (length > 0) {
+        int chunk = MIN(length, ZEROES.length);
+        [self ringWrite:position buffer:ZEROES offset:0 count:chunk];
+        length -= chunk;
+        position += chunk;
+    }
 }
 
 - (void)clear {
+    // Commit the header
+    [self writeHeader:QUEUE_FILE_INITIAL_LENGTH elementCount:0 firstPosition:0 lastPosition:0];
+
+    // Zero out the data.
+    [self ringWrite:QUEUE_FILE_HEADER_LENGTH buffer:ZEROES offset:0 count:QUEUE_FILE_INITIAL_LENGTH - QUEUE_FILE_HEADER_LENGTH];
+
+    _elementCount = 0;
+    _first = ELEMENT_NULL;
+    _last = ELEMENT_NULL;
+    if (_fileLength > QUEUE_FILE_INITIAL_LENGTH) {
+        [self setLength:QUEUE_FILE_INITIAL_LENGTH];
+    }
+    _fileLength = QUEUE_FILE_INITIAL_LENGTH;
+}
+
+- (void)setLength:(int)newLength {
+    [_fileHandle truncateFileAtOffset:newLength];
+    [_fileHandle synchronizeFile];
 }
 
 @end
