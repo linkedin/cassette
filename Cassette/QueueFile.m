@@ -200,6 +200,20 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     int position = wasEmpty ? QUEUE_FILE_HEADER_LENGTH
             : [self wrapPosition:_last.position + ELEMENT_HEADER_LENGTH + _last.length];
     Element *newLast = [Element elementAtPosition:position withLength:count];
+
+    // Write length.
+    writeInt(_buffer, 0, count);
+    [self ringWrite:newLast.position buffer:_buffer offset:0 count:ELEMENT_HEADER_LENGTH];
+
+    // Write data.
+    [self ringWrite:newLast.position + ELEMENT_HEADER_LENGTH buffer:data offset:0 count:count];
+
+    // Commit the addition. If wasEmpty, first == last.
+    int firstPosition = wasEmpty ? newLast.position : _first.position;
+    [self writeHeader:_fileLength elementCount:_elementCount + 1 firstPosition:firstPosition lastPosition:newLast.position];
+    _last = newLast;
+    _elementCount++;
+    if (wasEmpty) _first = _last; // first element
 }
 
 /** If necessary, expands the file to accommodate an additional element of the given length. */
@@ -227,6 +241,34 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
                 + ELEMENT_HEADER_LENGTH + _last.length // last entry
                 + _fileLength - _first.position;       // buffer end
     }
+}
+
+- (void)ringWrite:(int)position buffer:(NSData *)buffer offset:(int)offset count:(int)count {
+    position = [self wrapPosition:position];
+
+    if (position + count <= _fileLength) {
+        [_fileHandle seekToFileOffset:position];
+        [_fileHandle writeData:[buffer subdataWithRange:NSMakeRange(offset, count)]];
+        return;
+    }
+
+    // The write overlaps the EOF.
+    // # of bytes to write before the EOF.
+    int beforeEof = _fileLength - position;
+    [_fileHandle seekToFileOffset:position];
+    [_fileHandle writeData:[buffer subdataWithRange:NSMakeRange(offset, beforeEof)]];
+    [_fileHandle seekToFileOffset:QUEUE_FILE_HEADER_LENGTH];
+    [_fileHandle writeData:[buffer subdataWithRange:NSMakeRange(offset + beforeEof, count - beforeEof)]];
+}
+
+- (void)writeHeader:(int)fileLength elementCount:(int)elementCount firstPosition:(int)firstPosition lastPosition:(int)lastPosition {
+    writeInt(_buffer, 0, fileLength);
+    writeInt(_buffer, 4, elementCount);
+    writeInt(_buffer, 8, firstPosition);
+    writeInt(_buffer, 12, lastPosition);
+
+    [_fileHandle seekToFileOffset:0];
+    [_fileHandle writeData:_buffer];
 }
 
 /** Returns true if this queue contains no entries. */
