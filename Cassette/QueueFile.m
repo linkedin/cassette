@@ -100,7 +100,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
                                            attributes:nil
                                                 error:&error];
     if (!success) {
-        // TODO: raise exception
+        [NSException raise:@"IOException" format:@"Could not initialize file at path: %@.", tempPath];
     }
 
     NSFileHandle *tempFileHandle =
@@ -110,12 +110,13 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     NSMutableData *headerBuffer = [NSMutableData dataWithLength:QUEUE_FILE_HEADER_LENGTH];
     writeInt(headerBuffer, 0, QUEUE_FILE_INITIAL_LENGTH);
     [tempFileHandle writeData:headerBuffer];
-    [tempFileHandle synchronizeFile]; // It's unclear if closing the file fsync's it as well
+    [tempFileHandle synchronizeFile]; // It's unclear if closing the file fsync's it as well so we're explicit
     [tempFileHandle closeFile];
 
+    // TODO: is moving atomic?
     [fileManager moveItemAtPath:tempPath toPath:path error:&error];
     if (error) {
-        // TODO: raise exception
+        [NSException raise:@"IOException" format:@"Could not move file from %@ to %@.", path, tempPath];
     }
 }
 
@@ -143,12 +144,11 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 - (void)readHeader {
     [_fileHandle seekToFileOffset:0];
     NSData *buffer = [_fileHandle readDataOfLength:QUEUE_FILE_HEADER_LENGTH];
-
     _fileLength = readInt(buffer, 0);
     if (_fileLength > sizeOfFile(_fileHandle)) {
-        // TODO: raise exception
+        [NSException raise:@"IOException" format:@"File is truncated. Expected length: %d, Actual length: %d", _fileLength, sizeOfFile(_fileHandle)];
     } else if (_fileLength <= 0) {
-        // TODO: raise exception
+        [NSException raise:@"IOException" format:@"File is corrupt; length stored in header (%d) is invalid.", _fileLength];
     }
 
     _elementCount = readInt(buffer, 4);
@@ -345,20 +345,20 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 
 - (void)remove:(int)n {
     if ([self isEmpty]) {
-        // TODO: raise exception
+        [NSException raise:@"Assertion" format:@"Cannot remove elements from an empty file."];
     }
     if (n < 0) {
-        // TODO: raise exception
+        [NSException raise:@"Assertion" format:@"Cannot remove negative number of elements."];
     }
     if (n == 0) {
-        // TODO: raise exception
+        return;
     }
     if (n == _elementCount) {
         [self clear];
         return;
     }
     if (n > _elementCount) {
-        // TODO: raise exception
+        [NSException raise:@"Assertion" format:@"Cannot remove more elements (%d) than in file (%d).", n, _elementCount];
     }
 
     int eraseStartPosition = _first.position;
