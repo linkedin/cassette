@@ -184,6 +184,34 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 }
 
 - (void)add:(NSData *)data {
+    [self expandIfNecessary:data.length];
+}
+
+/** If necessary, expands the file to accommodate an additional element of the given length. */
+- (void)expandIfNecessary:(int)dataLength {
+    int elementLength = ELEMENT_HEADER_LENGTH + dataLength;
+    int remainingBytes = [self remainingBytes];
+    if (remainingBytes >= elementLength) return;
+}
+
+- (int)remainingBytes {
+    return _fileLength - [self usedBytes];
+}
+
+- (int)usedBytes {
+    if (_elementCount == 0) return QUEUE_FILE_HEADER_LENGTH;
+
+    if (_last.position >= _first.position) {
+        // Contiguous queue.
+        return (_last.position - _first.position)   // all but last entry
+                + ELEMENT_HEADER_LENGTH + _last.length // last entry
+                + QUEUE_FILE_HEADER_LENGTH;
+    } else {
+        // tail < head. The queue wraps.
+        return _last.position                      // buffer front + header
+                + ELEMENT_HEADER_LENGTH + _last.length // last entry
+                + _fileLength - _first.position;        // buffer end
+    }
 }
 
 - (BOOL)isEmpty {
