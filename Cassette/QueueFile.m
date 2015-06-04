@@ -381,6 +381,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
   return _elementCount == 0;
 }
 
+/** Reads the eldest element. Returns null if the queue is empty. */
 - (NSData *)peek {
   if ([self isEmpty]) {
     return NULL;
@@ -390,14 +391,17 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
                   count:_first.length];
 }
 
+/** Returns the number of elements in this queue. */
 - (int)size {
   return _elementCount;
 }
 
+/** Removes the eldest element. */
 - (void)remove {
   [self remove:1];
 }
 
+/** Removes the eldest {@code n} elements. */
 - (void)remove:(int)n {
   if ([self isEmpty]) {
     [NSException raise:@"Assertion"
@@ -447,11 +451,13 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
   [self ringErase:eraseStartPosition length:eraseTotalLength];
 }
 
+/** Erases the file starting at {@code position} until {@code length}. */
 - (void)ringErase:(int)position length:(int)length {
   NSData *buffer = [NSMutableData dataWithCapacity:length];
   [self ringWrite:position buffer:buffer offset:0 count:length];
 }
 
+/** Clears this queue. Truncates the file to the initial size. */
 - (void)clear {
   // Commit the header
   [self writeHeader:QUEUE_FILE_INITIAL_LENGTH
@@ -476,6 +482,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
   _fileLength = QUEUE_FILE_INITIAL_LENGTH;
 }
 
+/** Sets the length of the file. */
 - (void)setLength:(int)newLength {
   [_fileHandle truncateFileAtOffset:newLength];
   [_fileHandle synchronizeFile];
