@@ -170,8 +170,10 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
   _last = [self readElement:lastOffset];
 }
 
-/** Reads the element stored at the given position in the file, wrapping around
- * if necessary. */
+/**
+ * Reads the element stored at the given position in the file, wrapping around
+ * if necessary.
+ */
 - (Element *)readElement:(int)position {
   if (position == 0) {
     return [Element null];
@@ -181,8 +183,10 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
   return [Element atPosition:position withLength:length];
 }
 
-/** Reads {@code count} bytes from the given position in the file, wrapping
- * around if necessary. */
+/**
+ * Reads {@code count} bytes from the given position in the file, wrapping
+ * around if necessary.
+ */
 - (NSData *)ringRead:(int)position count:(int)count {
   position = [self wrapPosition:position];
 
@@ -246,8 +250,10 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
     _first = _last; // first element
 }
 
-/** If necessary, expands the file to accommodate an additional element of the
- * given length. */
+/**
+ * If necessary, expands the file to accommodate an additional element of the
+ * given length.
+ */
 - (void)expandIfNecessary:(int)dataLength {
   int elementLength = ELEMENT_HEADER_LENGTH + dataLength;
   int remainingBytes = [self remainingBytes];
@@ -320,10 +326,9 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 }
 
 /**
-* Writes {@code count} bytes from buffer to position in file. Automatically
-* wraps write if position is
-* past the end of the file or if buffer overlaps it.
-*/
+ * Writes {@code count} bytes from buffer to position in file. Automatically
+ * wraps write if position is past the end of the file or if buffer overlaps it.
+ */
 - (void)ringWrite:(int)position
            buffer:(NSData *)buffer
            offset:(int)offset
@@ -351,14 +356,12 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 }
 
 /**
-* Writes header atomically. The arguments contain the updated values. The class
-* member fields
-* should not have changed yet. This only updates the state in the file. It's up
-* to the caller to
-* update the class member variables *after* this call succeeds. Assumes segment
-* writes are
-* atomic in the underlying file system.
-*/
+ * Writes header atomically. The arguments contain the updated values. The class
+ * member fields should not have changed yet. This only updates the state in the
+ * file. It's up to the caller to update the class member variables *after* this
+ * call succeeds. Assumes segment writes are atomic in the underlying file
+ * system.
+ */
 - (void)writeHeader:(int)fileLength
        elementCount:(int)elementCount
       firstPosition:(int)firstPosition
