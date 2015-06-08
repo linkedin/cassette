@@ -39,8 +39,16 @@ NSData *dataForString(NSString *text) {
   [super tearDown];
 }
 
-- (void)testPeek {
+- (void)testAdd {
   NSData *data = dataForString(@"foo");
+
+  [self.queueFile add:data];
+
+  XCTAssertEqual(1, [self.queueFile size]);
+}
+
+- (void)testPeek {
+  NSData *data = dataForString(@"bar");
 
   [self.queueFile add:data];
 
