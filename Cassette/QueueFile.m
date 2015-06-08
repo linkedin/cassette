@@ -88,35 +88,27 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 }
 
 /** Atomically initializes a new QueueFile at the given path. */
-+ (void)initialize:(NSString *)path {
+void initialize(NSString *path) {
   NSFileManager *fileManager = [NSFileManager defaultManager];
 
-  // Use a temp file so we don't leave a partially-initialized file.
+  // Use a temporary file so we don't leave a partially-initialized file.
   NSString *tempPath = [NSString stringWithFormat:@"%@.tmp", path];
 
-  NSError *error = nil;
-  BOOL success = [fileManager createDirectoryAtPath:tempPath
-                        withIntermediateDirectories:YES
-                                         attributes:nil
-                                              error:&error];
+  NSMutableData *headerBuffer =
+      [NSMutableData dataWithLength:QUEUE_FILE_INITIAL_LENGTH];
+  writeInt(headerBuffer, 0, QUEUE_FILE_INITIAL_LENGTH);
+
+  BOOL success = [fileManager createFileAtPath:tempPath
+                                      contents:headerBuffer
+                                    attributes:nil];
+
   if (!success) {
     [NSException raise:@"IOException"
                 format:@"Could not initialize file at path: %@.", tempPath];
   }
 
-  NSFileHandle *tempFileHandle =
-      [NSFileHandle fileHandleForUpdatingAtPath:tempPath];
-  [tempFileHandle truncateFileAtOffset:QUEUE_FILE_INITIAL_LENGTH];
-  [tempFileHandle seekToFileOffset:0];
-  NSMutableData *headerBuffer =
-      [NSMutableData dataWithLength:QUEUE_FILE_HEADER_LENGTH];
-  writeInt(headerBuffer, 0, QUEUE_FILE_INITIAL_LENGTH);
-  [tempFileHandle writeData:headerBuffer];
-  [tempFileHandle synchronizeFile]; // It's unclear if closing the file fsync's
-                                    // it as well so we're explicit
-  [tempFileHandle closeFile];
-
   // TODO: is moving atomic?
+  NSError *error;
   [fileManager moveItemAtPath:tempPath toPath:path error:&error];
   if (error) {
     [NSException raise:@"IOException"
@@ -127,7 +119,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 + (QueueFile *)queueFileWithPath:(NSString *)path {
   NSFileManager *fileManager = [NSFileManager defaultManager];
   if (![fileManager fileExistsAtPath:path]) {
-    [QueueFile initialize:path];
+    initialize(path);
   }
 
   return [[self alloc] initWithPath:path forManager:fileManager];
@@ -149,6 +141,7 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
 - (void)readHeader {
   [_fileHandle seekToFileOffset:0];
   NSData *buffer = [_fileHandle readDataOfLength:QUEUE_FILE_HEADER_LENGTH];
+
   _fileLength = readInt(buffer, 0);
   if (_fileLength > sizeOfFile(_fileHandle)) {
     [NSException

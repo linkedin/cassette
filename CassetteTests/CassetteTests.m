@@ -11,50 +11,46 @@
 #import "QueueFile.h"
 
 @interface CassetteTests : XCTestCase
-
+@property(nonatomic, strong) NSString *filePath;
+@property(nonatomic, strong) QueueFile *queueFile;
 @end
 
 @implementation CassetteTests
 
+NSData *randomNSData() {
+  NSMutableData *data = [NSMutableData dataWithLength:100000];
+  for (unsigned int i = 0; i < 100000 / 4; ++i) {
+    u_int32_t randomBits = arc4random();
+    [data appendBytes:(void *)&randomBits length:4];
+  }
+  return data;
+}
+
 - (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each
-    // test method in the class.
+  [super setUp];
+
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                       NSUserDomainMask, YES);
+  NSString *documentsDirectory = [paths objectAtIndex:0];
+  self.filePath =
+      [documentsDirectory stringByAppendingPathComponent:@"QueueFile.test"];
+  self.queueFile = [QueueFile queueFileWithPath:self.filePath];
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each
-    // test method in the class.
-    [super tearDown];
+  [[NSFileManager defaultManager] removeItemAtPath:self.filePath error:nil];
+
+  [super tearDown];
 }
 
-static void writeInt(NSMutableData *buffer, int offset, int value) {
-    [buffer replaceBytesInRange:NSMakeRange(offset, 4) withBytes:&value];
-}
+- (void)testPeek {
+  XCTAssert(YES, @"Pass");
 
-static int readInt(NSData *data, int offset) {
-    int value;
-    [data getBytes:&value range:NSMakeRange(offset, 4)];
-    return value;
-}
+  NSData *data = randomNSData();
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+  [self.queueFile add:data];
 
-    NSMutableData *headerBuffer = [NSMutableData dataWithLength:16];
-    writeInt(headerBuffer, 0, 4096);
-    writeInt(headerBuffer, 4, 1024);
-    // NSLog(@"wrote at 4: %@", headerBuffer.bytes);
-    XCTAssertEqual(4096, readInt(headerBuffer, 0));
-    XCTAssertEqual(1024, readInt(headerBuffer, 4));
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+  XCTAssertEqual([self.queueFile peek], data);
 }
 
 @end
