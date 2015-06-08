@@ -462,7 +462,7 @@ void initialize(NSString *path) {
 
   // Zero out the data.
   NSData *buffer = [NSMutableData
-      dataWithCapacity:QUEUE_FILE_INITIAL_LENGTH - QUEUE_FILE_HEADER_LENGTH];
+      dataWithLength:QUEUE_FILE_INITIAL_LENGTH - QUEUE_FILE_HEADER_LENGTH];
   [self ringWrite:QUEUE_FILE_HEADER_LENGTH
            buffer:buffer
            offset:0

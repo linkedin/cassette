@@ -55,4 +55,15 @@ NSData *dataForString(NSString *text) {
   XCTAssert([data isEqualToData:[self.queueFile peek]]);
 }
 
+- (void)testClear {
+  [self.queueFile add:dataForString(@"foo")];
+  [self.queueFile add:dataForString(@"bar")];
+  [self.queueFile add:dataForString(@"baz")];
+  XCTAssertEqual(3, [self.queueFile size]);
+
+  [self.queueFile clear];
+
+  XCTAssertEqual(0, [self.queueFile size]);
+}
+
 @end
