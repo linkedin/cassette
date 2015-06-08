@@ -13,7 +13,7 @@
 /** Length of header in bytes. */
 #define QUEUE_FILE_HEADER_LENGTH 16
 /** Length of element header in bytes. */
-#define ELEMENT_HEADER_LENGTH 16
+#define ELEMENT_HEADER_LENGTH 4
 
 @interface Element : NSObject
 
@@ -239,8 +239,9 @@ void initialize(NSString *path) {
        lastPosition:newLast.position];
   _last = newLast;
   _elementCount++;
-  if (wasEmpty)
+  if (wasEmpty) {
     _first = _last; // first element
+  }
 }
 
 /**
@@ -250,8 +251,9 @@ void initialize(NSString *path) {
 - (void)expandIfNecessary:(int)dataLength {
   int elementLength = ELEMENT_HEADER_LENGTH + dataLength;
   int remainingBytes = [self remainingBytes];
-  if (remainingBytes >= elementLength)
+  if (remainingBytes >= elementLength) {
     return;
+  }
 
   // Expand.
   int previousLength = _fileLength;
@@ -329,9 +331,9 @@ void initialize(NSString *path) {
   position = [self wrapPosition:position];
 
   if (position + count <= _fileLength) {
+    NSData *actual = [buffer subdataWithRange:NSMakeRange(offset, count)];
     [_fileHandle seekToFileOffset:position];
-    [_fileHandle
-        writeData:[buffer subdataWithRange:NSMakeRange(offset, count)]];
+    [_fileHandle writeData:actual];
   } else {
     // The write overlaps the EOF.
     // # of bytes to write before the EOF.

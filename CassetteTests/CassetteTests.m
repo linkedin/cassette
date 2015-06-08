@@ -17,13 +17,9 @@
 
 @implementation CassetteTests
 
-NSData *randomNSData() {
-  NSMutableData *data = [NSMutableData dataWithLength:100000];
-  for (unsigned int i = 0; i < 100000 / 4; ++i) {
-    u_int32_t randomBits = arc4random();
-    [data appendBytes:(void *)&randomBits length:4];
-  }
-  return data;
+NSData *dataForString(NSString *text) {
+  const char *s = [text UTF8String];
+  return [NSData dataWithBytes:s length:strlen(s) + 1];
 }
 
 - (void)setUp {
@@ -44,13 +40,11 @@ NSData *randomNSData() {
 }
 
 - (void)testPeek {
-  XCTAssert(YES, @"Pass");
-
-  NSData *data = randomNSData();
+  NSData *data = dataForString(@"foo");
 
   [self.queueFile add:data];
 
-  XCTAssertEqual([self.queueFile peek], data);
+  XCTAssert([data isEqualToData:[self.queueFile peek]]);
 }
 
 @end
