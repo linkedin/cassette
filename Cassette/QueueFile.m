@@ -47,6 +47,7 @@
 @property(nonatomic, strong, readwrite) NSFileManager *fileManager;
 @property(nonatomic, strong, readwrite) NSString *filePath;
 @property(nonatomic, strong, readwrite) NSFileHandle *fileHandle;
+@property(nonatomic, strong, readwrite) NSFileHandle *backupFileHandle;
 
 /** In-memory buffer. Big enough to hold the header. */
 @property(nonatomic, readwrite) NSMutableData *buffer;
@@ -81,9 +82,9 @@ int readInt(NSData *buffer, int offset) {
 
 /** Returns the size of the while without clobbering the current offset. */
 unsigned long long int sizeOfFile(NSFileHandle *fileHandle) {
-  unsigned long long int offsetInFile = fileHandle.offsetInFile;
+  unsigned long long int originalOffset = fileHandle.offsetInFile;
   unsigned long long int size = [fileHandle seekToEndOfFile];
-  [fileHandle seekToFileOffset:offsetInFile];
+  [fileHandle seekToFileOffset:originalOffset];
   return size;
 }
 
