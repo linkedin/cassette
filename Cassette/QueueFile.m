@@ -448,7 +448,7 @@ void initialize(NSString *path) {
 
 /** Erases the file starting at {@code position} until {@code length}. */
 - (void)ringErase:(int)position length:(int)length {
-  NSData *buffer = [NSMutableData dataWithCapacity:length];
+  NSData *buffer = [NSMutableData dataWithLength:length];
   [self ringWrite:position buffer:buffer offset:0 count:length];
 }
 

@@ -61,6 +61,16 @@ NSData *dataForString(NSString *text) {
   XCTAssertEqual(0, [self.queueFile size]);
 }
 
+- (void)testRemoveWithMultipleInQueue {
+  [self.queueFile add:dataForString(@"foo")];
+  [self.queueFile add:dataForString(@"bar")];
+  [self.queueFile add:dataForString(@"baz")];
+
+  [self.queueFile remove];
+  
+  XCTAssertEqual(2, [self.queueFile size]);
+}
+
 - (void)testPeek {
   NSData *data = dataForString(@"bar");
 
