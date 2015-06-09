@@ -39,9 +39,14 @@ NSData *dataForString(NSString *text) {
   [super tearDown];
 }
 
-- (void)testAdd {
-  [self.queueFile add:dataForString(@"foo")];
+- (void)testAddOneElement {
+  NSData *foo = dataForString(@"foo");
+  [self.queueFile add:foo];
+  XCTAssert([foo isEqualToData:[self.queueFile peek]]);
+  XCTAssertEqual(1, [self.queueFile size]);
 
+  self.queueFile = [QueueFile queueFileWithPath:self.filePath];
+  XCTAssert([foo isEqualToData:[self.queueFile peek]]);
   XCTAssertEqual(1, [self.queueFile size]);
 }
 
@@ -88,6 +93,23 @@ NSData *dataForString(NSString *text) {
   [self.queueFile clear];
 
   XCTAssertEqual(0, [self.queueFile size]);
+}
+
+- (void)testClearErasesDataFromFile {
+  NSData *foo = dataForString(@"foo");
+  [self.queueFile add:foo];
+
+  // Confirm that the data was in the file before we cleared.
+  NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:self.filePath];
+  [fileHandle seekToFileOffset:16 + 4]; // Seek to first element
+  XCTAssert([foo isEqualToData:[fileHandle readDataOfLength:foo.length]]);
+  
+  [self.queueFile clear];
+  
+  // Should have been erased.
+  NSData *empty = [NSMutableData dataWithLength:foo.length];
+  [fileHandle seekToFileOffset:16 + 4]; // Seek to first element
+  XCTAssert([empty isEqualToData:[fileHandle readDataOfLength:foo.length]]);
 }
 
 -(void)testSuccessivePeekAndRemove {
