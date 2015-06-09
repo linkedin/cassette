@@ -72,11 +72,11 @@ NSData *dataForString(NSString *text) {
 }
 
 - (void)testPeek {
-  NSData *data = dataForString(@"bar");
+  NSData *bar = dataForString(@"bar");
 
-  [self.queueFile add:data];
+  [self.queueFile add:bar];
 
-  XCTAssert([data isEqualToData:[self.queueFile peek]]);
+  XCTAssert([bar isEqualToData:[self.queueFile peek]]);
 }
 
 - (void)testClear {
@@ -88,6 +88,22 @@ NSData *dataForString(NSString *text) {
   [self.queueFile clear];
 
   XCTAssertEqual(0, [self.queueFile size]);
+}
+
+-(void)testSuccessivePeekAndRemove {
+  NSData *foo = dataForString(@"foo");
+  NSData *bar = dataForString(@"bar");
+  NSData *baz = dataForString(@"baz");
+
+  [self.queueFile add:foo];
+  [self.queueFile add:bar];
+  [self.queueFile add:baz];
+  
+  XCTAssert([foo isEqualToData:[self.queueFile peek]]);
+  [self.queueFile remove];
+  XCTAssert([bar isEqualToData:[self.queueFile peek]]);
+  [self.queueFile remove];
+  XCTAssert([baz isEqualToData:[self.queueFile peek]]);
 }
 
 @end
