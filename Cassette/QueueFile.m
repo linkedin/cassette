@@ -146,7 +146,7 @@ void initialize(NSString *path) {
   if (_fileLength > sizeOfFile(_fileHandle)) {
     [NSException
          raise:@"IOException"
-        format:@"File is truncated. Expected length: %d, Actual length: %d",
+        format:@"File is truncated. Expected length: %d, Actual length: %llu",
                _fileLength, sizeOfFile(_fileHandle)];
   } else if (_fileLength <= 0) {
     [NSException
