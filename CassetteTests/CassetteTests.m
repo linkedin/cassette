@@ -40,11 +40,25 @@ NSData *dataForString(NSString *text) {
 }
 
 - (void)testAdd {
-  NSData *data = dataForString(@"foo");
-
-  [self.queueFile add:data];
+  [self.queueFile add:dataForString(@"foo")];
 
   XCTAssertEqual(1, [self.queueFile size]);
+}
+
+- (void)testMultipleAdd {
+  [self.queueFile add:dataForString(@"foo")];
+  [self.queueFile add:dataForString(@"bar")];
+  [self.queueFile add:dataForString(@"baz")];
+
+  XCTAssertEqual(3, [self.queueFile size]);
+}
+
+- (void)testRemove {
+  [self.queueFile add:dataForString(@"foo")];
+  
+  [self.queueFile remove];
+  
+  XCTAssertEqual(0, [self.queueFile size]);
 }
 
 - (void)testPeek {
