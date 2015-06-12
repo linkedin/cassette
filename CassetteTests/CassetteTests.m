@@ -14,9 +14,9 @@
  * @define XCTAssertDataEqual(data, expected)
  * Generates a failure when the given data objects are not equal.
  */
-#define XCTAssertDataEqual(data, expected)                                     \
-  XCTAssert([expected isEqualToData:data], @"Expected %@ to be equal to %@.",  \
-            data, expected)
+#define XCTAssertDataEqual(actual, expected)                                   \
+  XCTAssert([expected isEqualToData:actual],                                   \
+            @"Expected %@ to be equal to %@.", expected, actual)
 
 @interface CassetteTests : XCTestCase
 @property(nonatomic, strong) NSString *filePath;
@@ -129,6 +129,7 @@ NSData *dataForString(NSString *text) {
   [self.queueFile add:foo];
   [self.queueFile add:bar];
   [self.queueFile add:baz];
+  self.queueFile = [QueueFile queueFileWithPath:self.filePath];
 
   XCTAssertDataEqual(foo, [self.queueFile peek]);
   [self.queueFile remove];

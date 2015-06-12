@@ -332,9 +332,9 @@ void initialize(NSString *path) {
   position = [self wrapPosition:position];
 
   if (position + count <= _fileLength) {
-    NSData *actual = [buffer subdataWithRange:NSMakeRange(offset, count)];
     [_fileHandle seekToFileOffset:position];
-    [_fileHandle writeData:actual];
+    [_fileHandle
+        writeData:[buffer subdataWithRange:NSMakeRange(offset, count)]];
   } else {
     // The write overlaps the EOF.
     // # of bytes to write before the EOF.
