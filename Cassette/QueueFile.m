@@ -132,10 +132,11 @@ void initialize(NSString *path)
         initialize(path);
     }
 
-    return [[self alloc] initWithPath:path];
+    return [[self alloc] initWithPath:path forManager:fileManager];
 }
 
 - (instancetype)initWithPath:(NSString *)filePath
+                  forManager:(NSFileManager *)fileManager
 {
     if (self = [super init]) {
         _fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
