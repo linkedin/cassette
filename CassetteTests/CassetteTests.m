@@ -20,6 +20,7 @@
 
 
 @interface CassetteTests : XCTestCase
+
 @property (nonatomic, strong) NSString *filePath;
 @property (nonatomic, strong) QueueFile *queueFile;
 @end
@@ -149,6 +150,21 @@ NSData *dataForString(NSString *text)
     XCTAssertDataEqual(bar, [self.queueFile peek]);
     [self.queueFile remove];
     XCTAssertDataEqual(baz, [self.queueFile peek]);
+}
+
+- (void)testRecoversFromIncompleteWrite
+{
+    // Add an entry.
+    [self.queueFile add:dataForString(@"foo")];
+
+    // Create a dirty commit file.
+    [[NSFileManager defaultManager] createFileAtPath:[NSString stringWithFormat:@"%@.commit", _filePath] contents:dataForString(@"bar") attributes:nil];
+
+    // Re-initialize the file.
+    self.queueFile = [QueueFile queueFileWithPath:self.filePath];
+
+    // Verify that there are no entries in the file.
+    XCTAssertEqual([[self queueFile] size], 0);
 }
 
 @end
