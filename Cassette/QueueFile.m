@@ -51,6 +51,8 @@
 @interface QueueFile ()
 
 @property (nonatomic, strong, readwrite) NSFileHandle *fileHandle;
+@property (nonatomic, strong, readwrite) NSString *commitFilePath;
+@property (nonatomic, strong, readwrite) NSFileManager *fileManager;
 
 /** In-memory buffer. Big enough to hold the header. */
 @property (nonatomic, readwrite) NSMutableData *buffer;
@@ -95,11 +97,14 @@ unsigned long long int sizeOfFile(NSFileHandle *fileHandle)
     return size;
 }
 
-/** Atomically initializes a new QueueFile at the given path. */
-void initialize(NSString *path)
+NSString *commitFilePathForFile(NSString *file)
 {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+    return [NSString stringWithFormat:@"%@.commit", file];
+}
 
+/** Atomically initializes a new QueueFile at the given path. */
+void initialize(NSString *path, NSFileManager *fileManager)
+{
     // Use a temporary file so we don't leave a partially-initialized file.
     NSString *tempPath = [NSString stringWithFormat:@"%@.tmp", path];
 
@@ -107,19 +112,14 @@ void initialize(NSString *path)
         [NSMutableData dataWithLength:QUEUE_FILE_INITIAL_LENGTH];
     writeInt(headerBuffer, 0, QUEUE_FILE_INITIAL_LENGTH);
 
-    BOOL success = [fileManager createFileAtPath:tempPath
-                                        contents:headerBuffer
-                                      attributes:nil];
-
-    if (!success) {
+    if (![fileManager createFileAtPath:tempPath
+                              contents:headerBuffer
+                            attributes:nil]) {
         [NSException raise:@"IOException"
                     format:@"Could not initialize file at path: %@.", tempPath];
     }
 
-    // TODO: is moving atomic?
-    NSError *error;
-    [fileManager moveItemAtPath:tempPath toPath:path error:&error];
-    if (error) {
+    if (![fileManager moveItemAtPath:tempPath toPath:path error:nil]) {
         [NSException raise:@"IOException"
                     format:@"Could not move file from %@ to %@.", path, tempPath];
     }
@@ -127,9 +127,23 @@ void initialize(NSString *path)
 
 + (QueueFile *)queueFileWithPath:(NSString *)path
 {
+    NSString *commitFilePath = commitFilePathForFile(path);
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:path]) {
-        initialize(path);
+
+    if ([fileManager fileExistsAtPath:commitFilePath]) {
+        // There was an unfinished commit, reinitialize everything.
+        if (![fileManager removeItemAtPath:path error:nil]) {
+            [NSException raise:@"IOException"
+                        format:@"Could not remove file at path: %@.", commitFilePath];
+        }
+        if (![fileManager removeItemAtPath:commitFilePath error:nil]) {
+            [NSException raise:@"IOException"
+                        format:@"Could not remove commit file at path: %@.", commitFilePath];
+        }
+        initialize(path, fileManager);
+    } else if (![fileManager fileExistsAtPath:path]) {
+        // There was no existing file, initialize one.
+        initialize(path, fileManager);
     }
 
     return [[self alloc] initWithPath:path forManager:fileManager];
@@ -139,6 +153,8 @@ void initialize(NSString *path)
                   forManager:(NSFileManager *)fileManager
 {
     if (self = [super init]) {
+        _commitFilePath = commitFilePathForFile(filePath);
+        _fileManager = fileManager;
         _fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
         _buffer = [NSMutableData dataWithLength:QUEUE_FILE_HEADER_LENGTH];
         [self readHeader];
@@ -174,9 +190,9 @@ void initialize(NSString *path)
 }
 
 /**
- * Reads the element stored at the given position in the file, wrapping around
- * if necessary.
- */
+* Reads the element stored at the given position in the file, wrapping around
+* if necessary.
+*/
 - (Element *)readElement:(int)position
 {
     if (position == 0) {
@@ -188,9 +204,9 @@ void initialize(NSString *path)
 }
 
 /**
- * Reads {@code count} bytes from the given position in the file, wrapping
- * around if necessary.
- */
+* Reads {@code count} bytes from the given position in the file, wrapping
+* around if necessary.
+*/
 - (NSData *)ringRead:(int)position count:(int)count
 {
     position = [self wrapPosition:position];
@@ -257,9 +273,9 @@ void initialize(NSString *path)
 }
 
 /**
- * If necessary, expands the file to accommodate an additional element of the
- * given length.
- */
+* If necessary, expands the file to accommodate an additional element of the
+* given length.
+*/
 - (void)expandIfNecessary:(int)dataLength
 {
     int elementLength = ELEMENT_HEADER_LENGTH + dataLength;
@@ -336,9 +352,9 @@ void initialize(NSString *path)
 }
 
 /**
- * Writes {@code count} bytes from buffer to position in file. Automatically
- * wraps write if position is past the end of the file or if buffer overlaps it.
- */
+* Writes {@code count} bytes from buffer to position in file. Automatically
+* wraps write if position is past the end of the file or if buffer overlaps it.
+*/
 - (void)ringWrite:(int)position
            buffer:(NSData *)buffer
            offset:(int)offset
@@ -367,12 +383,12 @@ void initialize(NSString *path)
 }
 
 /**
- * Writes header atomically. The arguments contain the updated values. The class
- * member fields should not have changed yet. This only updates the state in the
- * file. It's up to the caller to update the class member variables *after* this
- * call succeeds. Assumes segment writes are atomic in the underlying file
- * system.
- */
+* Writes header atomically. The arguments contain the updated values. The class
+* member fields should not have changed yet. This only updates the state in the
+* file. It's up to the caller to update the class member variables *after* this
+* call succeeds. Assumes segment writes are atomic in the underlying file
+* system.
+*/
 - (void)writeHeader:(int)fileLength
        elementCount:(int)elementCount
       firstPosition:(int)firstPosition
@@ -383,9 +399,21 @@ void initialize(NSString *path)
     writeInt(_buffer, 8, firstPosition);
     writeInt(_buffer, 12, lastPosition);
 
+    if (![_fileManager createFileAtPath:_commitFilePath
+                               contents:_buffer
+                             attributes:nil]) {
+        [NSException raise:@"IOException"
+                    format:@"Could not initialize commit file at path: %@.", _commitFilePath];
+    }
+
     [_fileHandle seekToFileOffset:0];
     [_fileHandle writeData:_buffer];
     [_fileHandle synchronizeFile];
+
+    if (![_fileManager removeItemAtPath:_commitFilePath error:nil]) {
+        [NSException raise:@"IOException"
+                    format:@"Could not remove commit file at path: %@.", _commitFilePath];
+    }
 }
 
 /** Returns true if this queue contains no entries. */
