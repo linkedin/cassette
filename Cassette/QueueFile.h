@@ -22,6 +22,13 @@
 /** Reads the eldest element. Returns null if the queue is empty. */
 - (NSData *)peek;
 
+/**
+ * Invokes the given reader once for each element in the queue, from eldest to most recently
+ * added and returns the number of elements visited. Continues until all elements are read or
+ * the reader returns false.
+ */
+- (int)forEach:(BOOL (^)(NSData *data))reader;
+
 /** Returns the number of elements in this queue. */
 - (int)size;
 

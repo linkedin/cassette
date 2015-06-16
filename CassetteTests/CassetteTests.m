@@ -44,6 +44,7 @@ NSData *dataForString(NSString *text)
     self.filePath =
         [documentsDirectory stringByAppendingPathComponent:@"QueueFile.test"];
     self.queueFile = [QueueFile queueFileWithPath:self.filePath];
+    [self.queueFile clear];
 }
 
 - (void)tearDown
@@ -165,6 +166,34 @@ NSData *dataForString(NSString *text)
 
     // Verify that there are no entries in the file.
     XCTAssertEqual([[self queueFile] size], 0);
+}
+
+- (void)testForEach
+{
+    NSData *foo = dataForString(@"foo");
+    NSData *bar = dataForString(@"bar");
+    NSData *baz = dataForString(@"baz");
+    [self.queueFile add:foo];
+    [self.queueFile add:bar];
+    [self.queueFile add:baz];
+
+    __block int invoked = 0;
+    int visited = [self.queueFile forEach:^(NSData *data) {
+      if (invoked == 0) {
+          XCTAssertDataEqual(foo, data);
+      } else if (invoked == 1) {
+          XCTAssertDataEqual(bar, data);
+      } else if (invoked == 2) {
+          XCTAssertDataEqual(baz, data);
+      } else {
+          XCTFail("Reader invoked with more elements than available.");
+      }
+      invoked++;
+      return YES;
+    }];
+
+    XCTAssertEqual(invoked, 3);
+    XCTAssertEqual(visited, 3);
 }
 
 @end
