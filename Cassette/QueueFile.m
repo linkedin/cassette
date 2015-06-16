@@ -44,10 +44,7 @@
 
 @interface QueueFile ()
 
-@property(nonatomic, strong, readwrite) NSFileManager *fileManager;
-@property(nonatomic, strong, readwrite) NSString *filePath;
 @property(nonatomic, strong, readwrite) NSFileHandle *fileHandle;
-@property(nonatomic, strong, readwrite) NSFileHandle *backupFileHandle;
 
 /** In-memory buffer. Big enough to hold the header. */
 @property(nonatomic, readwrite) NSMutableData *buffer;
@@ -129,8 +126,6 @@ void initialize(NSString *path) {
 - (instancetype)initWithPath:(NSString *)filePath
                   forManager:(NSFileManager *)fileManager {
   if (self = [super init]) {
-    _filePath = filePath;
-    _fileManager = fileManager;
     _fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
     _buffer = [NSMutableData dataWithLength:QUEUE_FILE_HEADER_LENGTH];
     [self readHeader];
@@ -219,7 +214,7 @@ void initialize(NSString *path) {
                                           ELEMENT_HEADER_LENGTH + _last.length];
   Element *newLast = [Element atPosition:position withLength:count];
 
-  // Write length.
+  // Write element length.
   writeInt(_buffer, 0, count);
   [self ringWrite:newLast.position
            buffer:_buffer
