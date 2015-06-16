@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface QueueFile : NSObject
 
 + (QueueFile *)queueFileWithPath:(NSString *)path;

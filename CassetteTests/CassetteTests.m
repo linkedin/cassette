@@ -14,128 +14,141 @@
  * @define XCTAssertDataEqual(data, expected)
  * Generates a failure when the given data objects are not equal.
  */
-#define XCTAssertDataEqual(actual, expected)                                   \
-  XCTAssert([expected isEqualToData:actual],                                   \
-            @"Expected %@ to be equal to %@.", expected, actual)
+#define XCTAssertDataEqual(actual, expected)   \
+    XCTAssert([expected isEqualToData:actual], \
+              @"Expected %@ to be equal to %@.", expected, actual)
+
 
 @interface CassetteTests : XCTestCase
-@property(nonatomic, strong) NSString *filePath;
-@property(nonatomic, strong) QueueFile *queueFile;
+@property (nonatomic, strong) NSString *filePath;
+@property (nonatomic, strong) QueueFile *queueFile;
 @end
+
 
 @implementation CassetteTests
 
-NSData *dataForString(NSString *text) {
-  const char *s = [text UTF8String];
-  return [NSData dataWithBytes:s length:strlen(s) + 1];
+NSData *dataForString(NSString *text)
+{
+    const char *s = [text UTF8String];
+    return [NSData dataWithBytes:s length:strlen(s) + 1];
 }
 
-- (void)setUp {
-  [super setUp];
+- (void)setUp
+{
+    [super setUp];
 
-  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                       NSUserDomainMask, YES);
-  NSString *documentsDirectory = [paths objectAtIndex:0];
-  self.filePath =
-      [documentsDirectory stringByAppendingPathComponent:@"QueueFile.test"];
-  self.queueFile = [QueueFile queueFileWithPath:self.filePath];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                         NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    self.filePath =
+        [documentsDirectory stringByAppendingPathComponent:@"QueueFile.test"];
+    self.queueFile = [QueueFile queueFileWithPath:self.filePath];
 }
 
-- (void)tearDown {
-  [[NSFileManager defaultManager] removeItemAtPath:self.filePath error:nil];
+- (void)tearDown
+{
+    [[NSFileManager defaultManager] removeItemAtPath:self.filePath error:nil];
 
-  [super tearDown];
+    [super tearDown];
 }
 
-- (void)testAddOneElement {
-  NSData *foo = dataForString(@"foo");
-  [self.queueFile add:foo];
-  XCTAssert([foo isEqualToData:[self.queueFile peek]]);
-  XCTAssertEqual(1, [self.queueFile size]);
+- (void)testAddOneElement
+{
+    NSData *foo = dataForString(@"foo");
+    [self.queueFile add:foo];
+    XCTAssert([foo isEqualToData:[self.queueFile peek]]);
+    XCTAssertEqual(1, [self.queueFile size]);
 
-  self.queueFile = [QueueFile queueFileWithPath:self.filePath];
-  XCTAssert([foo isEqualToData:[self.queueFile peek]]);
-  XCTAssertEqual(1, [self.queueFile size]);
+    self.queueFile = [QueueFile queueFileWithPath:self.filePath];
+    XCTAssert([foo isEqualToData:[self.queueFile peek]]);
+    XCTAssertEqual(1, [self.queueFile size]);
 }
 
-- (void)testMultipleAdd {
-  [self.queueFile add:dataForString(@"foo")];
-  [self.queueFile add:dataForString(@"bar")];
-  [self.queueFile add:dataForString(@"baz")];
+- (void)testMultipleAdd
+{
+    [self.queueFile add:dataForString(@"foo")];
+    [self.queueFile add:dataForString(@"bar")];
+    [self.queueFile add:dataForString(@"baz")];
 
-  XCTAssertEqual(3, [self.queueFile size]);
+    XCTAssertEqual(3, [self.queueFile size]);
 }
 
-- (void)testRemove {
-  [self.queueFile add:dataForString(@"foo")];
+- (void)testRemove
+{
+    [self.queueFile add:dataForString(@"foo")];
 
-  [self.queueFile remove];
+    [self.queueFile remove];
 
-  XCTAssertEqual(0, [self.queueFile size]);
+    XCTAssertEqual(0, [self.queueFile size]);
 }
 
-- (void)testRemoveWithMultipleInQueue {
-  [self.queueFile add:dataForString(@"foo")];
-  [self.queueFile add:dataForString(@"bar")];
-  [self.queueFile add:dataForString(@"baz")];
+- (void)testRemoveWithMultipleInQueue
+{
+    [self.queueFile add:dataForString(@"foo")];
+    [self.queueFile add:dataForString(@"bar")];
+    [self.queueFile add:dataForString(@"baz")];
 
-  [self.queueFile remove];
+    [self.queueFile remove];
 
-  XCTAssertEqual(2, [self.queueFile size]);
+    XCTAssertEqual(2, [self.queueFile size]);
 }
 
-- (void)testPeek {
-  NSData *bar = dataForString(@"bar");
+- (void)testPeek
+{
+    NSData *bar = dataForString(@"bar");
 
-  [self.queueFile add:bar];
+    [self.queueFile add:bar];
 
-  XCTAssertDataEqual(bar, [self.queueFile peek]);
+    XCTAssertDataEqual(bar, [self.queueFile peek]);
 }
 
-- (void)testClear {
-  [self.queueFile add:dataForString(@"foo")];
-  [self.queueFile add:dataForString(@"bar")];
-  [self.queueFile add:dataForString(@"baz")];
-  XCTAssertEqual(3, [self.queueFile size]);
+- (void)testClear
+{
+    [self.queueFile add:dataForString(@"foo")];
+    [self.queueFile add:dataForString(@"bar")];
+    [self.queueFile add:dataForString(@"baz")];
+    XCTAssertEqual(3, [self.queueFile size]);
 
-  [self.queueFile clear];
+    [self.queueFile clear];
 
-  XCTAssertEqual(0, [self.queueFile size]);
+    XCTAssertEqual(0, [self.queueFile size]);
 }
 
-- (void)testClearErasesDataFromFile {
-  NSData *foo = dataForString(@"foo");
-  [self.queueFile add:foo];
+- (void)testClearErasesDataFromFile
+{
+    NSData *foo = dataForString(@"foo");
+    [self.queueFile add:foo];
 
-  // Confirm that the data was in the file before we cleared.
-  NSFileHandle *fileHandle =
-      [NSFileHandle fileHandleForUpdatingAtPath:self.filePath];
-  [fileHandle seekToFileOffset:16 + 4]; // Seek to first element
-  XCTAssertDataEqual(foo, [fileHandle readDataOfLength:foo.length]);
+    // Confirm that the data was in the file before we cleared.
+    NSFileHandle *fileHandle =
+        [NSFileHandle fileHandleForUpdatingAtPath:self.filePath];
+    [fileHandle seekToFileOffset:16 + 4]; // Seek to first element
+    XCTAssertDataEqual(foo, [fileHandle readDataOfLength:foo.length]);
 
-  [self.queueFile clear];
+    [self.queueFile clear];
 
-  // Should have been erased.
-  NSData *empty = [NSMutableData dataWithLength:foo.length];
-  [fileHandle seekToFileOffset:16 + 4]; // Seek to first element
-  XCTAssertDataEqual(empty, [fileHandle readDataOfLength:foo.length]);
+    // Should have been erased.
+    NSData *empty = [NSMutableData dataWithLength:foo.length];
+    [fileHandle seekToFileOffset:16 + 4]; // Seek to first element
+    XCTAssertDataEqual(empty, [fileHandle readDataOfLength:foo.length]);
 }
 
-- (void)testSuccessivePeekAndRemove {
-  NSData *foo = dataForString(@"foo");
-  NSData *bar = dataForString(@"bar");
-  NSData *baz = dataForString(@"baz");
+- (void)testSuccessivePeekAndRemove
+{
+    NSData *foo = dataForString(@"foo");
+    NSData *bar = dataForString(@"bar");
+    NSData *baz = dataForString(@"baz");
 
-  [self.queueFile add:foo];
-  [self.queueFile add:bar];
-  [self.queueFile add:baz];
-  self.queueFile = [QueueFile queueFileWithPath:self.filePath];
+    [self.queueFile add:foo];
+    [self.queueFile add:bar];
+    [self.queueFile add:baz];
+    self.queueFile = [QueueFile queueFileWithPath:self.filePath];
 
-  XCTAssertDataEqual(foo, [self.queueFile peek]);
-  [self.queueFile remove];
-  XCTAssertDataEqual(bar, [self.queueFile peek]);
-  [self.queueFile remove];
-  XCTAssertDataEqual(baz, [self.queueFile peek]);
+    XCTAssertDataEqual(foo, [self.queueFile peek]);
+    [self.queueFile remove];
+    XCTAssertDataEqual(bar, [self.queueFile peek]);
+    [self.queueFile remove];
+    XCTAssertDataEqual(baz, [self.queueFile peek]);
 }
 
 @end
