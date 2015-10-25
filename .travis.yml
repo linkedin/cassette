@@ -1,0 +1,8 @@
+language: objective-c
+
+osx_image: xcode6.4
+
+script: make build test
+
+notifications:
+  email: false
