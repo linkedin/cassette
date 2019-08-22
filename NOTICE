@@ -1,0 +1,11 @@
+Copyright 2019 LinkedIn Corporation 
+All Rights Reserved.
+
+Licensed under the BSD 2-Clause License (the "License").  See License in the project root for license information.
+
+This product is based on:
+
+* Cassette
+https://github.com/linkedin/cassette/tree/56c6d28d372548a752734bad9518cbaaf8ef0c7d
+Copyright (C) 2015 Segment.io, Inc.
+License: MIT
