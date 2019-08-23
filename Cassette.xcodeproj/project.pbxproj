@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00F51DF502CEE37E08D774E7 /* libPods-Cassette-CassetteTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11BC2AFE01B19B98289F90B4 /* libPods-Cassette-CassetteTests.a */; };
 		6E126BF61B1F816200856CCA /* Cassette.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E126BF51B1F816200856CCA /* Cassette.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6E126BFC1B1F816300856CCA /* Cassette.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E126BF01B1F816200856CCA /* Cassette.framework */; };
 		6E126C031B1F816300856CCA /* CassetteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E126C021B1F816300856CCA /* CassetteTests.m */; };
 		6E126C0E1B1F818100856CCA /* QueueFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E126C0C1B1F818100856CCA /* QueueFile.h */; };
 		6E126C0F1B1F818100856CCA /* QueueFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E126C0D1B1F818100856CCA /* QueueFile.m */; };
+		EE307E3EA23ECC9721F5D93A /* libPods-Cassette.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33E401B0C57F6407AB4BA549 /* libPods-Cassette.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +27,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D910F2975ED908A5492A170 /* Pods-Cassette-CassetteTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cassette-CassetteTests.release.xcconfig"; path = "Target Support Files/Pods-Cassette-CassetteTests/Pods-Cassette-CassetteTests.release.xcconfig"; sourceTree = "<group>"; };
+		11BC2AFE01B19B98289F90B4 /* libPods-Cassette-CassetteTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Cassette-CassetteTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		20064E82733FF0AC4F765955 /* Pods-Cassette-CassetteTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cassette-CassetteTests.debug.xcconfig"; path = "Target Support Files/Pods-Cassette-CassetteTests/Pods-Cassette-CassetteTests.debug.xcconfig"; sourceTree = "<group>"; };
+		33E401B0C57F6407AB4BA549 /* libPods-Cassette.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Cassette.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		45D76CCD0A76E5C1CCFA8447 /* Pods-Cassette.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cassette.release.xcconfig"; path = "Target Support Files/Pods-Cassette/Pods-Cassette.release.xcconfig"; sourceTree = "<group>"; };
 		6E126BF01B1F816200856CCA /* Cassette.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cassette.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E126BF41B1F816200856CCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6E126BF51B1F816200856CCA /* Cassette.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cassette.h; sourceTree = "<group>"; };
@@ -33,6 +40,7 @@
 		6E126C021B1F816300856CCA /* CassetteTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CassetteTests.m; sourceTree = "<group>"; };
 		6E126C0C1B1F818100856CCA /* QueueFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueFile.h; sourceTree = "<group>"; };
 		6E126C0D1B1F818100856CCA /* QueueFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueFile.m; sourceTree = "<group>"; };
+		7F66F602AB0D8B57684B1FDD /* Pods-Cassette.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cassette.debug.xcconfig"; path = "Target Support Files/Pods-Cassette/Pods-Cassette.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE307E3EA23ECC9721F5D93A /* libPods-Cassette.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +57,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E126BFC1B1F816300856CCA /* Cassette.framework in Frameworks */,
+				00F51DF502CEE37E08D774E7 /* libPods-Cassette-CassetteTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +70,8 @@
 				6E126BF21B1F816200856CCA /* Cassette */,
 				6E126BFF1B1F816300856CCA /* CassetteTests */,
 				6E126BF11B1F816200856CCA /* Products */,
+				E7D1C46B8C435EFD69D05914 /* Pods */,
+				76C6D6DC28656FE1072D5121 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +120,27 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		76C6D6DC28656FE1072D5121 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33E401B0C57F6407AB4BA549 /* libPods-Cassette.a */,
+				11BC2AFE01B19B98289F90B4 /* libPods-Cassette-CassetteTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E7D1C46B8C435EFD69D05914 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7F66F602AB0D8B57684B1FDD /* Pods-Cassette.debug.xcconfig */,
+				45D76CCD0A76E5C1CCFA8447 /* Pods-Cassette.release.xcconfig */,
+				20064E82733FF0AC4F765955 /* Pods-Cassette-CassetteTests.debug.xcconfig */,
+				0D910F2975ED908A5492A170 /* Pods-Cassette-CassetteTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -127,6 +160,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6E126C061B1F816300856CCA /* Build configuration list for PBXNativeTarget "Cassette" */;
 			buildPhases = (
+				DFA5A9BA59C604BFA7557AFC /* [CP] Check Pods Manifest.lock */,
 				6E126BEB1B1F816200856CCA /* Sources */,
 				6E126BEC1B1F816200856CCA /* Frameworks */,
 				6E126BED1B1F816200856CCA /* Headers */,
@@ -145,6 +179,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6E126C091B1F816300856CCA /* Build configuration list for PBXNativeTarget "CassetteTests" */;
 			buildPhases = (
+				A27A331E6ED847DB1A22D589 /* [CP] Check Pods Manifest.lock */,
 				6E126BF71B1F816300856CCA /* Sources */,
 				6E126BF81B1F816300856CCA /* Frameworks */,
 				6E126BF91B1F816300856CCA /* Resources */,
@@ -210,6 +245,53 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A27A331E6ED847DB1A22D589 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Cassette-CassetteTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DFA5A9BA59C604BFA7557AFC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Cassette-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6E126BEB1B1F816200856CCA /* Sources */ = {
@@ -329,6 +411,7 @@
 		};
 		6E126C071B1F816300856CCA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F66F602AB0D8B57684B1FDD /* Pods-Cassette.debug.xcconfig */;
 			buildSettings = {
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -344,6 +427,7 @@
 		};
 		6E126C081B1F816300856CCA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 45D76CCD0A76E5C1CCFA8447 /* Pods-Cassette.release.xcconfig */;
 			buildSettings = {
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -359,6 +443,7 @@
 		};
 		6E126C0A1B1F816300856CCA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 20064E82733FF0AC4F765955 /* Pods-Cassette-CassetteTests.debug.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -376,6 +461,7 @@
 		};
 		6E126C0B1B1F816300856CCA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0D910F2975ED908A5492A170 /* Pods-Cassette-CassetteTests.release.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
