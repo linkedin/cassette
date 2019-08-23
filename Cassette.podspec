@@ -5,7 +5,7 @@ Pod::Spec.new do |spec|
   spec.license          =  { :type => 'BSD-2-Clause' }
 
   spec.homepage         = 'https://github.com/linkedin/cassette'
-  spec.authors          = { 'LinkedIn' }
+  spec.authors          = 'LinkedIn'
   spec.summary          = 'A lightning fast file-based FIFO queue for iOS and OSX.'
 
   spec.source           =  { :git => 'https://github.com/linkedin/cassette.git', :tag => spec.version }
