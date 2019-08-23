@@ -1,0 +1,123 @@
+// iOS build settings shared between apps/libs and debug flavor
+
+#include "Cassette.common.xcconfig"
+
+
+// ARCHITECTURES
+
+// Whether to only build the active architecture.
+// We set to YES for Debug and NO for Release, which means in debug we only build for one (active - based on the device selected) architecture instead of all supported.
+ONLY_ACTIVE_ARCH = YES
+
+// Allow @testable imports
+// When this setting is activated, the product will be built with options appropriate for running automated tests,
+// such as making private interfaces accessible to the tests.
+// This may result in tests running slower than they would without testability enabled.
+ENABLE_TESTABILITY = YES
+
+
+// DEPLOYMENT
+
+// If enabled, indicates that binaries should be stripped and file mode, owner, and group information should be set to standard values.
+DEPLOYMENT_POSTPROCESSING = NO
+
+// Specifies whether binary files that are copied during the build, such as in a Copy Bundle Resources or Copy Files build phase, should be stripped of debugging symbols.
+// It does not cause the linked product of a target to be stripped—use `STRIP_INSTALLED_PRODUCT` for that.
+COPY_PHASE_STRIP = NO
+
+// If enabled, the linked product of the build will be stripped of symbols when performing deployment postprocessing.
+STRIP_INSTALLED_PRODUCT = NO
+
+// The level of symbol stripping to be performed on the linked product of the build.
+// For debug: Strips debugging symbols, but saves local and global symbols.
+STRIP_STYLE = debugging
+
+// Adjust the level of symbol stripping specified by the STRIP_STYLE setting so that when the linked product of the build is stripped, all Swift symbols will be removed.
+STRIP_SWIFT_SYMBOLS = NO
+
+
+// LINKING
+
+// Activating this setting causes the `-dead_strip` flag to be passed to `ld(1)` via `cc(1)` to turn on dead code stripping
+DEAD_CODE_STRIPPING = YES
+
+
+// SIGNING
+
+// A list of additional options to pass to `codesign(1)`.
+// For Debug builds, we don't require timestamping because Apple's server may be down or we may be off-network
+OTHER_CODE_SIGN_FLAGS = --timestamp=none
+
+// LLVM - CODE GENERATION
+
+// The type of debug information to produce.
+// We use "dwarf" for debug, and "dwarf-with-dsym" for release as for debug builds we do not need symbols file (saves time)
+DEBUG_INFORMATION_FORMAT = dwarf
+
+// Faster function calls for applications. Not appropriate for shared libraries, which need to be position-independent.
+// TODO TOOLS-179439: check if we should set it to YES for app target
+GCC_DYNAMIC_NO_PIC = NO
+
+// The optimization level (0, 1, 2, 3, s) for the produced binary
+// For debug do not optimize.
+GCC_OPTIMIZATION_LEVEL = 0
+
+// Toggles the amount of debug information emitted when debug symbols are enabled.
+// This can impact the size of the generated debug information, which may matter in some cases for large projects, such as when using LTO.
+CLANG_DEBUG_INFORMATION_LEVEL = "line-tables-only"
+
+// Enabling this setting allows optimization across file boundaries during linking.
+// units). For debug builds this breaks debugging (stepping in and breaking) for ObjC libraries: VOYINF-13392
+LLVM_LTO = NO
+
+// Space-separated list of additional flags to pass to the compiler for C and Objective-C files.
+// Be sure to backslash-escape any arguments that contain spaces or special characters, such as path names that may contain spaces.
+// Use this setting if Xcode does not already provide UI for a particular C or Objective-C compiler flag.
+// These settings catch some errors in integer arithmetic
+OTHER_CFLAGS = $(inherited) -ftrapv
+
+
+// LLVM - PREPROCESSING
+
+// Controls whether assertion logic provided by NSAssert is included in the preprocessed source code or is elided during preprocessing.
+// Disabling assertions can improve code performance - we disable in release.
+ENABLE_NS_ASSERTIONS = YES
+
+// Space-separated list of preprocessor macros of the form `foo` or `foo=bar`.
+// Preproccessor definitions to apply to each file compiled
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) DEBUG=1 KIF_EXCEL=1
+
+// Space-separated list of preprocessor macros of the form `foo` or `foo=bar`.
+// These macros are not used when precompiling a prefix header file.
+// TODO TOOLS-179439: this breaks DEBUG checks in macros - investigate further
+// GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "DEBUG=1"
+
+
+// SWIFT COMPILER
+
+// The combination of flags before allows us to get faster
+// Debug build times by haivng Swift runner perform WMO phases
+// but do not actually perform any compiler optimizations.
+// See the commit notes and RB 859331 for details.
+
+// The optimization level (-Onone, -O, -Osize) for the produced Swift binary
+SWIFT_OPTIMIZATION_LEVEL = -Onone
+SWIFT_COMPILATION_MODE = wholemodule
+
+// TODO: With Xcode10, incremental mode should work much faster
+// SWIFT_COMPILATION_MODE = incremental
+
+// A list of compilation conditions to enable for conditional compilation expressions.
+// This enables conditional compilation with #if DEBUG
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) DEBUG KIF_EXCEL
+
+// This setting controls the level of reflection metadata the Swift compiler emits.
+// Debug: Type information about stored properties of Swift structs and classes, Swift enum cases, and their names, are emitted into the binary for reflection and analysis in the Memory Graph Debugger.
+SWIFT_REFLECTION_METADATA_LEVEL = all
+
+
+// ASSET CATALOG COMPILER
+
+// The ENABLE_INCREMENTAL_DISTILL option to actool seems broken.
+// Having it enabled causes actool to fail on incremental builds.
+ENABLE_INCREMENTAL_DISTILL = NO

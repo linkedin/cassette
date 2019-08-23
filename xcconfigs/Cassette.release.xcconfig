@@ -1,0 +1,92 @@
+// iOS build settings shared between apps/libs and release flavor
+
+#include "Cassette.common.xcconfig"
+
+// BUILD
+
+// Whether to perform some App Store validation checks
+VALIDATE_PRODUCT = YES
+
+// DEPLOYMENT
+
+// Additional flags to be passed when stripping the linked product of the build.
+// "man strip" for the available flags
+// -u - Save all undefined symbols. This is intended for use with relocatable objects to save symbols referred to by external relocation entries.
+//      Note that common symbols are also referred to by external relocation entries and this flag does not save those symbols.
+// -r - Save all symbols referenced dynamically.
+STRIPFLAGS = -u -r
+
+// If enabled, indicates that binaries should be stripped and file mode, owner, and group information should be set to standard values.
+DEPLOYMENT_POSTPROCESSING = YES
+
+// Specifies whether binary files that are copied during the build, such as in a Copy Bundle Resources or Copy Files build phase, should be stripped of debugging symbols.
+// It does not cause the linked product of a target to be stripped—use `STRIP_INSTALLED_PRODUCT` for that.
+COPY_PHASE_STRIP = YES
+
+// If enabled, the linked product of the build will be stripped of symbols when performing deployment postprocessing.
+STRIP_INSTALLED_PRODUCT = YES
+
+// The level of symbol stripping to be performed on the linked product of the build.
+// For release: Completely strips the binary, removing the symbol table and relocation information.
+//STRIP_STYLE = all - this makes the binary ~10MB larger
+STRIP_STYLE = non-global
+
+// Adjust the level of symbol stripping specified by the STRIP_STYLE setting so that when the linked product of the build is stripped, all Swift symbols will be removed.
+STRIP_SWIFT_SYMBOLS = YES
+
+
+// LINKING
+
+// Activating this setting causes the `-dead_strip` flag to be passed to `ld(1)` via `cc(1)` to turn on dead code stripping
+DEAD_CODE_STRIPPING = YES
+
+
+// LLVM - CODE GENERATION
+
+// The type of debug information to produce.
+// We use "dwarf" for debug, and "dwarf-with-dsym" for release as for debug builds we do not need symbols file (saves time)
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+// Enabling this setting allows optimization across file boundaries during linking.
+// For release, YES means monolithic - this mode performs monolithic link-time optimization of binaries, combining all executable code into a single unit and running aggressive compiler optimizations.
+// TODO TOOLS-179439: check build perf impact and binary size gains
+//LLVM_LTO = YES - this saves 200KB in binary size but makes release builds 3 minutes longer (on dev machine)
+LLVM_LTO = NO
+
+// The optimization level (0, 1, 2, 3, s) for the produced binary
+// For release, we optimize for size. This setting enables all `Faster` optimizations that do not typically increase code size.
+// It also performs further optimizations designed to reduce code size.
+GCC_OPTIMIZATION_LEVEL = s
+
+
+// LLVM - PREPROCESSING
+
+// Controls whether assertion logic provided by NSAssert is included in the preprocessed source code or is elided during preprocessing.
+// Disabling assertions can improve code performance - we disable in release.
+ENABLE_NS_ASSERTIONS = NO
+
+
+// SWIFT COMPILER
+
+// The optimization level (-Onone, -O, -Osize) for the produced Swift binary
+SWIFT_OPTIMIZATION_LEVEL = -Osize
+
+// Compilation mode (independent of optimization level)
+SWIFT_COMPILATION_MODE = wholemodule
+
+// This setting controls the level of reflection metadata the Swift compiler emits.
+// For release, no reflection metadata is emitted into the binary. Accuracy of detecting memory issues involving Swift types in the Memory Graph Debugger will be degraded and reflection in Swift code may not be able to discover children of types, such as properties and enum cases.
+SWIFT_REFLECTION_METADATA_LEVEL = None
+
+// Space-separated list of additional flags to pass to the compiler for C and Objective-C files.
+// Be sure to backslash-escape any arguments that contain spaces or special characters, such as path names that may contain spaces.
+// Use this setting if Xcode does not already provide UI for a particular C or Objective-C compiler flag.
+// For release, we enable stack protector to harden from buffer overflows:
+// -fstack-protector
+//   Emit extra code to check for buffer overflows, such as stack smashing attacks. This is done by adding a guard variable to functions with vulnerable objects.
+//   This includes functions that call alloca, and functions with buffers larger than 8 bytes.
+//   The guards are initialized when a function is entered and then checked when the function exits.
+//   If a guard check fails, an error message is printed and the program exits.
+// -fstack-protector-all
+//   Like -fstack-protector except that all functions are protected.
+OTHER_CFLAGS = $(inherited) -fstack-protector-all
