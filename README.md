@@ -1,6 +1,6 @@
 # Cassette 
 
-Cassette is a collection of queue-related classes for iOS and OSX. It is maintained by LinkedIn. Cassette was originally implemented by [Segment](https://segment.com). Cassette was inspired by [Tape](https://github.com/square/tape).
+Cassette is a collection of queue-related classes for iOS and OSX. It is maintained by [LinkedIn](https://engineering.linkedin.com/). Cassette was originally implemented by [Segment](https://segment.com). Cassette was inspired by [Tape](https://github.com/square/tape).
 
 Currently Cassette consists solely of `QueueFile`.
 
