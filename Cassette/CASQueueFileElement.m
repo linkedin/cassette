@@ -8,4 +8,20 @@
 //  WITHOUT WARRANTIES OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and limitations under the License.
 
-#import <Cassette/CASQueueFile.h>
+#import "CASQueueFileElement.h"
+
+@implementation CASQueueFileElement
+
++ (instancetype)null {
+    return [[CASQueueFileElement alloc] initAtPosition:0 withLength:0];
+}
+
+- (instancetype)initAtPosition:(NSUInteger)position withLength:(NSUInteger)length {
+    if (self = [super init]) {
+        _position = position;
+        _length = length;
+    }
+    return self;
+}
+
+@end

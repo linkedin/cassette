@@ -8,4 +8,22 @@
 //  WITHOUT WARRANTIES OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and limitations under the License.
 
-#import <Cassette/CASQueueFile.h>
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+FOUNDATION_EXPORT NSString *const CASErrorDomain;
+FOUNDATION_EXPORT const int CASErrorCode;
+
+typedef NS_ENUM(NSInteger, CASErrorType) {
+    CASErrorFileInitialization
+};
+
+@interface CASError : NSObject
+
++ (NSError *)createError:(CASErrorType)type;
++ (BOOL)handleError:(nullable NSError *)casError error:(NSError * __autoreleasing *)error;
+
+@end
+
+NS_ASSUME_NONNULL_END

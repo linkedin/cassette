@@ -8,4 +8,8 @@
 //  WITHOUT WARRANTIES OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and limitations under the License.
 
-#import <Cassette/CASQueueFile.h>
+#ifdef DEBUG
+#define CASLOG(msg, ...) NSLog(msg, ##__VA_ARGS__)
+#else
+#define CASLOG(msg, ...)
+#endif
