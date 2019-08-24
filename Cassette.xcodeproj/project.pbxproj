@@ -17,10 +17,15 @@
 		3C4A83602311BC5000D06FAE /* CASPrivateConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4A835F2311BC5000D06FAE /* CASPrivateConstants.h */; };
 		3C4A83622311BD1200D06FAE /* CASQueueFileElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A83612311BD1200D06FAE /* CASQueueFileElement.m */; };
 		3C4A83642311BD3700D06FAE /* CASError.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A83632311BD3700D06FAE /* CASError.m */; };
+		3C4A83682311DC6E00D06FAE /* CASObjectQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4A83672311DC6E00D06FAE /* CASObjectQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3C4A836A2311DC8500D06FAE /* CASObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A83692311DC8500D06FAE /* CASObjectQueue.m */; };
+		3C4A836C2311DCCC00D06FAE /* CASFileObjectQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4A836B2311DCCC00D06FAE /* CASFileObjectQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3C4A836E2311DD1800D06FAE /* CASFileObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A836D2311DD1800D06FAE /* CASFileObjectQueue.m */; };
+		3C4A83702311DD4000D06FAE /* CASFileObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A836F2311DD4000D06FAE /* CASFileObjectQueue.m */; };
 		6E126BF61B1F816200856CCA /* Cassette.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E126BF51B1F816200856CCA /* Cassette.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6E126BFC1B1F816300856CCA /* Cassette.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E126BF01B1F816200856CCA /* Cassette.framework */; };
 		6E126C031B1F816300856CCA /* CASQueueFileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E126C021B1F816300856CCA /* CASQueueFileTests.m */; };
-		6E126C0E1B1F818100856CCA /* CASQueueFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E126C0C1B1F818100856CCA /* CASQueueFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6E126C0E1B1F818100856CCA /* CASQueueFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E126C0C1B1F818100856CCA /* CASQueueFile.h */; };
 		6E126C0F1B1F818100856CCA /* CASQueueFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E126C0D1B1F818100856CCA /* CASQueueFile.m */; };
 		EE307E3EA23ECC9721F5D93A /* libPods-Cassette.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33E401B0C57F6407AB4BA549 /* libPods-Cassette.a */; };
 /* End PBXBuildFile section */
@@ -49,6 +54,11 @@
 		3C4A835F2311BC5000D06FAE /* CASPrivateConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CASPrivateConstants.h; sourceTree = "<group>"; };
 		3C4A83612311BD1200D06FAE /* CASQueueFileElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASQueueFileElement.m; sourceTree = "<group>"; };
 		3C4A83632311BD3700D06FAE /* CASError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASError.m; sourceTree = "<group>"; };
+		3C4A83672311DC6E00D06FAE /* CASObjectQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CASObjectQueue.h; sourceTree = "<group>"; };
+		3C4A83692311DC8500D06FAE /* CASObjectQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASObjectQueue.m; sourceTree = "<group>"; };
+		3C4A836B2311DCCC00D06FAE /* CASFileObjectQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CASFileObjectQueue.h; sourceTree = "<group>"; };
+		3C4A836D2311DD1800D06FAE /* CASFileObjectQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASFileObjectQueue.m; sourceTree = "<group>"; };
+		3C4A836F2311DD4000D06FAE /* CASFileObjectQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASFileObjectQueue.m; sourceTree = "<group>"; };
 		45D76CCD0A76E5C1CCFA8447 /* Pods-Cassette.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cassette.release.xcconfig"; path = "Target Support Files/Pods-Cassette/Pods-Cassette.release.xcconfig"; sourceTree = "<group>"; };
 		6E126BF01B1F816200856CCA /* Cassette.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cassette.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E126BF41B1F816200856CCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -118,13 +128,17 @@
 			isa = PBXGroup;
 			children = (
 				6E126BF51B1F816200856CCA /* Cassette.h */,
+				6E126BF31B1F816200856CCA /* Supporting Files */,
+				3C4A83672311DC6E00D06FAE /* CASObjectQueue.h */,
+				3C4A83692311DC8500D06FAE /* CASObjectQueue.m */,
+				3C4A836B2311DCCC00D06FAE /* CASFileObjectQueue.h */,
+				3C4A836D2311DD1800D06FAE /* CASFileObjectQueue.m */,
 				6E126C0C1B1F818100856CCA /* CASQueueFile.h */,
 				6E126C0D1B1F818100856CCA /* CASQueueFile.m */,
 				3C4A835B2311BA7A00D06FAE /* CASQueueFileElement.h */,
 				3C4A83612311BD1200D06FAE /* CASQueueFileElement.m */,
 				3C4A835D2311BAD300D06FAE /* CASError.h */,
 				3C4A83632311BD3700D06FAE /* CASError.m */,
-				6E126BF31B1F816200856CCA /* Supporting Files */,
 				3C4A835F2311BC5000D06FAE /* CASPrivateConstants.h */,
 			);
 			path = Cassette;
@@ -141,8 +155,9 @@
 		6E126BFF1B1F816300856CCA /* CassetteTests */ = {
 			isa = PBXGroup;
 			children = (
-				6E126C021B1F816300856CCA /* CASQueueFileTests.m */,
 				6E126C001B1F816300856CCA /* Supporting Files */,
+				6E126C021B1F816300856CCA /* CASQueueFileTests.m */,
+				3C4A836F2311DD4000D06FAE /* CASFileObjectQueue.m */,
 			);
 			path = CassetteTests;
 			sourceTree = "<group>";
@@ -185,6 +200,8 @@
 				6E126C0E1B1F818100856CCA /* CASQueueFile.h in Headers */,
 				3C4A835E2311BAD300D06FAE /* CASError.h in Headers */,
 				6E126BF61B1F816200856CCA /* Cassette.h in Headers */,
+				3C4A836C2311DCCC00D06FAE /* CASFileObjectQueue.h in Headers */,
+				3C4A83682311DC6E00D06FAE /* CASObjectQueue.h in Headers */,
 				3C4A83602311BC5000D06FAE /* CASPrivateConstants.h in Headers */,
 				3C4A835C2311BA7A00D06FAE /* CASQueueFileElement.h in Headers */,
 			);
@@ -342,8 +359,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C4A836E2311DD1800D06FAE /* CASFileObjectQueue.m in Sources */,
 				3C4A83622311BD1200D06FAE /* CASQueueFileElement.m in Sources */,
 				3C4A83642311BD3700D06FAE /* CASError.m in Sources */,
+				3C4A836A2311DC8500D06FAE /* CASObjectQueue.m in Sources */,
 				6E126C0F1B1F818100856CCA /* CASQueueFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -352,6 +371,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C4A83702311DD4000D06FAE /* CASFileObjectQueue.m in Sources */,
 				6E126C031B1F816300856CCA /* CASQueueFileTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
