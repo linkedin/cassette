@@ -22,9 +22,15 @@
 		3C4A836C2311DCCC00D06FAE /* CASFileObjectQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4A836B2311DCCC00D06FAE /* CASFileObjectQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3C4A836E2311DD1800D06FAE /* CASFileObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A836D2311DD1800D06FAE /* CASFileObjectQueue.m */; };
 		3C4A83702311DD4000D06FAE /* CASFileObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A836F2311DD4000D06FAE /* CASFileObjectQueue.m */; };
-		3C4A8376231306D000D06FAE /* CASInMemoryObjectQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4A8375231306D000D06FAE /* CASInMemoryObjectQueue.h */; };
+		3C4A8376231306D000D06FAE /* CASInMemoryObjectQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4A8375231306D000D06FAE /* CASInMemoryObjectQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3C4A8378231306FA00D06FAE /* CASInMemoryObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A8377231306FA00D06FAE /* CASInMemoryObjectQueue.m */; };
 		3C4A837A2313075000D06FAE /* CASInMemoryObjectQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A83792313075000D06FAE /* CASInMemoryObjectQueueTests.m */; };
+		3C4A838323130A1000D06FAE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A838223130A1000D06FAE /* AppDelegate.m */; };
+		3C4A838B23130A1200D06FAE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C4A838A23130A1200D06FAE /* Assets.xcassets */; };
+		3C4A839123130A1200D06FAE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A839023130A1200D06FAE /* main.m */; };
+		3C4A839723130AA500D06FAE /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A839623130AA500D06FAE /* MainViewController.m */; };
+		3C4A839923130C0600D06FAE /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C4A839823130C0600D06FAE /* MainViewController.xib */; };
+		3C4A839A23130C8D00D06FAE /* Cassette.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E126BF01B1F816200856CCA /* Cassette.framework */; };
 		6E126BF61B1F816200856CCA /* Cassette.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E126BF51B1F816200856CCA /* Cassette.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6E126BFC1B1F816300856CCA /* Cassette.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E126BF01B1F816200856CCA /* Cassette.framework */; };
 		6E126C031B1F816300856CCA /* CASQueueFileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E126C021B1F816300856CCA /* CASQueueFileTests.m */; };
@@ -65,6 +71,15 @@
 		3C4A8375231306D000D06FAE /* CASInMemoryObjectQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CASInMemoryObjectQueue.h; sourceTree = "<group>"; };
 		3C4A8377231306FA00D06FAE /* CASInMemoryObjectQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASInMemoryObjectQueue.m; sourceTree = "<group>"; };
 		3C4A83792313075000D06FAE /* CASInMemoryObjectQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASInMemoryObjectQueueTests.m; sourceTree = "<group>"; };
+		3C4A837F23130A1000D06FAE /* CASSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CASSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C4A838123130A1000D06FAE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		3C4A838223130A1000D06FAE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		3C4A838A23130A1200D06FAE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3C4A838F23130A1200D06FAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3C4A839023130A1200D06FAE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3C4A839523130A9700D06FAE /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		3C4A839623130AA500D06FAE /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		3C4A839823130C0600D06FAE /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
 		45D76CCD0A76E5C1CCFA8447 /* Pods-Cassette.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cassette.release.xcconfig"; path = "Target Support Files/Pods-Cassette/Pods-Cassette.release.xcconfig"; sourceTree = "<group>"; };
 		6E126BF01B1F816200856CCA /* Cassette.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cassette.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E126BF41B1F816200856CCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -78,6 +93,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3C4A837C23130A1000D06FAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C4A839A23130C8D00D06FAE /* Cassette.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6E126BEC1B1F816200856CCA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -109,12 +132,28 @@
 			path = xcconfigs;
 			sourceTree = "<group>";
 		};
+		3C4A838023130A1000D06FAE /* CASSampleApp */ = {
+			isa = PBXGroup;
+			children = (
+				3C4A838123130A1000D06FAE /* AppDelegate.h */,
+				3C4A838223130A1000D06FAE /* AppDelegate.m */,
+				3C4A838A23130A1200D06FAE /* Assets.xcassets */,
+				3C4A838F23130A1200D06FAE /* Info.plist */,
+				3C4A839023130A1200D06FAE /* main.m */,
+				3C4A839523130A9700D06FAE /* MainViewController.h */,
+				3C4A839623130AA500D06FAE /* MainViewController.m */,
+				3C4A839823130C0600D06FAE /* MainViewController.xib */,
+			);
+			path = CASSampleApp;
+			sourceTree = "<group>";
+		};
 		6E126BE61B1F816200856CCA = {
 			isa = PBXGroup;
 			children = (
 				3C4A83512311B29400D06FAE /* xcconfigs */,
 				6E126BF21B1F816200856CCA /* Cassette */,
 				6E126BFF1B1F816300856CCA /* CassetteTests */,
+				3C4A838023130A1000D06FAE /* CASSampleApp */,
 				6E126BF11B1F816200856CCA /* Products */,
 				E7D1C46B8C435EFD69D05914 /* Pods */,
 				76C6D6DC28656FE1072D5121 /* Frameworks */,
@@ -126,6 +165,7 @@
 			children = (
 				6E126BF01B1F816200856CCA /* Cassette.framework */,
 				6E126BFB1B1F816300856CCA /* CassetteTests.xctest */,
+				3C4A837F23130A1000D06FAE /* CASSampleApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -220,6 +260,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		3C4A837E23130A1000D06FAE /* CASSampleApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C4A839223130A1200D06FAE /* Build configuration list for PBXNativeTarget "CASSampleApp" */;
+			buildPhases = (
+				3C4A837B23130A1000D06FAE /* Sources */,
+				3C4A837C23130A1000D06FAE /* Frameworks */,
+				3C4A837D23130A1000D06FAE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CASSampleApp;
+			productName = CASSampleApp;
+			productReference = 3C4A837F23130A1000D06FAE /* CASSampleApp.app */;
+			productType = "com.apple.product-type.application";
+		};
 		6E126BEF1B1F816200856CCA /* Cassette */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6E126C061B1F816300856CCA /* Build configuration list for PBXNativeTarget "Cassette" */;
@@ -267,6 +324,11 @@
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = LinkedIn;
 				TargetAttributes = {
+					3C4A837E23130A1000D06FAE = {
+						CreatedOnToolsVersion = 10.3;
+						DevelopmentTeam = 57Y47U492U;
+						ProvisioningStyle = Automatic;
+					};
 					6E126BEF1B1F816200856CCA = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = 57Y47U492U;
@@ -284,6 +346,7 @@
 			knownRegions = (
 				English,
 				en,
+				Base,
 			);
 			mainGroup = 6E126BE61B1F816200856CCA;
 			productRefGroup = 6E126BF11B1F816200856CCA /* Products */;
@@ -292,11 +355,21 @@
 			targets = (
 				6E126BEF1B1F816200856CCA /* Cassette */,
 				6E126BFA1B1F816300856CCA /* CassetteTests */,
+				3C4A837E23130A1000D06FAE /* CASSampleApp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3C4A837D23130A1000D06FAE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C4A838B23130A1200D06FAE /* Assets.xcassets in Resources */,
+				3C4A839923130C0600D06FAE /* MainViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6E126BEE1B1F816200856CCA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -365,6 +438,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3C4A837B23130A1000D06FAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C4A839123130A1200D06FAE /* main.m in Sources */,
+				3C4A839723130AA500D06FAE /* MainViewController.m in Sources */,
+				3C4A838323130A1000D06FAE /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6E126BEB1B1F816200856CCA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -399,6 +482,77 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		3C4A839323130A1200D06FAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 57Y47U492U;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = CASSampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.linkedin.CASSampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3C4A839423130A1200D06FAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 57Y47U492U;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = CASSampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.linkedin.CASSampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		6E126C041B1F816300856CCA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3C4A83552311B29400D06FAE /* Cassette.debug.xcconfig */;
@@ -558,6 +712,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3C4A839223130A1200D06FAE /* Build configuration list for PBXNativeTarget "CASSampleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C4A839323130A1200D06FAE /* Debug */,
+				3C4A839423130A1200D06FAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6E126BEA1B1F816200856CCA /* Build configuration list for PBXProject "Cassette" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

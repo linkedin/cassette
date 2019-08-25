@@ -8,6 +8,10 @@
 //  WITHOUT WARRANTIES OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and limitations under the License.
 
-#import <Cassette/CASObjectQueue.h>
-#import <Cassette/CASFileObjectQueue.h>
-#import <Cassette/CASInMemoryObjectQueue.h>
+#import <UIKit/UIKit.h>
+
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
+
+@property (strong, nonatomic) UIWindow *window;
+
+@end
