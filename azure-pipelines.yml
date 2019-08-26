@@ -1,0 +1,43 @@
+trigger:
+- master
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: macOS-10.14
+  demands: xcode
+
+variables:
+  workspace: 'Cassette.xcworkspace'
+  scheme: 'Cassette'
+  xcodeVersion: '10'
+
+steps:
+- task: CocoaPods@0
+  displayName: 'pod install'
+
+- task: Xcode@5
+  displayName: 'Xcode build'
+  inputs:
+    configuration: 'Release'
+    sdk: 'iphoneos'
+    xcWorkspacePath: $(workspace)
+    scheme: $(scheme)
+    xcodeVersion: $(xcodeVersion)
+
+- task: Xcode@5
+  displayName: 'Xcode test'
+  inputs:
+    actions: test
+    configuration: 'Debug'
+    sdk: 'iphonesimulator'
+    xcWorkspacePath: $(workspace)
+    scheme: $(scheme)
+    xcodeVersion: $(xcodeVersion)
+    destinationPlatformOption: 'iOS'
+    destinationSimulators: 'iPhone X'
+    publishJUnitResults: true
