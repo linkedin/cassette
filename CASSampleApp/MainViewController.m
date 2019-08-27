@@ -11,10 +11,11 @@
 #import "MainViewController.h"
 
 #import <Cassette/CASFileObjectQueue.h>
+#import <Cassette/CASInMemoryObjectQueue.h>
 
 @interface MainViewController ()<UITextFieldDelegate>
 
-@property (nonatomic, strong, nullable) CASFileObjectQueue<NSNumber *> *queue;
+@property (nonatomic, strong, nullable) CASObjectQueue<NSNumber *> *queue;
 
 @property (weak, nonatomic) IBOutlet UITextField *inputField;
 @property (weak, nonatomic) IBOutlet UILabel *headElementLabel;
@@ -37,7 +38,8 @@
     NSError *error;
     self.queue = [[CASFileObjectQueue alloc] initWithRelativePath:@"sample-app-tape-storage" error:&error];
     if (error != nil) {
-        NSLog(@"Queue should have been properly created but it wasn't.");
+        NSLog(@"Failed to create persistent queue, using in-memory solution instead.");
+        self.queue = [[CASInMemoryObjectQueue alloc] init];
     }
 
     self.inputField.delegate = self;

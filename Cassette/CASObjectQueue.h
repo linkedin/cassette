@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CASObjectQueue<T> : NSObject
+@interface CASObjectQueue<T: id<NSCoding>> : NSObject
 
 /**
  * Adds an element to the end of the queue.
