@@ -17,5 +17,41 @@ Cassette is a collection of queue-related classes for iOS and OSX. It is maintai
 Download the [latest binary](https://github.com/linkedin/cassette/releases) of the library.
 
 ## Usage
-* Add the `Cassette` library to your project.
+`CASObjectQueue` works with arbitrary objects that abide by the [NSCoding](https://developer.apple.com/documentation/foundation/nscoding?language=objc) protocol. An `CASObjectQueue` may be backed by a persistent `CASQueueFile`, or in memory. 
 
+```
+CASObjectQueue<NSNumber *> *queue;
+
+// Persistent ObjectQueue
+NSError *error;
+queue = [[CASFileObjectQueue alloc] initWithRelativePath:@"Test-File" error:&error];
+
+// In-Memory ObjectQueue
+queue = [[CASInMemoryObjectQueue alloc] init];
+```
+
+Add some data to the end of the queue.
+```
+[queue add:@1];
+```
+
+Read data at the head of the queue.
+```
+// Peek the eldest element.
+NSNumber *data = [queue peek];
+
+// Peek the eldest `n` elements.
+NSArray<NSNumber *> *data = [queue peek:n];
+```
+
+Remove processed elements.
+```
+// Remove the eldest element.
+[queue pop];
+
+// Remove 'n' elements.
+[queue pop:n];
+
+// Remove all elements.
+[queue clear];
+```
