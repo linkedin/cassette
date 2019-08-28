@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CASFileObjectQueue<T: id<NSCoding>> : CASObjectQueue<T>
 
 /**
- * Initializes an @c CASFileObjectQueue with a file in the Documents directory,
+ * Initializes an @c CASFileObjectQueue with a file in the application's Library directory,
  * returning nil if there was an error.
  */
 - (nullable instancetype)initWithRelativePath:(NSString *)filePath error:(NSError * __autoreleasing * _Nullable)error;
