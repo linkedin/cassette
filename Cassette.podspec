@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name             = 'Cassette'
-  spec.version          = '0.1.0'
+  spec.version          = '1.0.0-beta1'
 
   spec.license          =  { :type => 'BSD-2-Clause' }
 

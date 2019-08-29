@@ -11,7 +11,11 @@ Cassette is a collection of queue-related classes for iOS and OSX. It is maintai
 ## Installing the Library
 
 #### CocoaPods
-`pod 'Cassette', '~> 0.1.0'`
+```
+target 'MyApp' do
+  pod 'Cassette', '1.0.0-beta1'
+end
+```
 
 #### Manual
 Download the [latest binary](https://github.com/linkedin/cassette/releases) of the library.
