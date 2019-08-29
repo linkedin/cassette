@@ -26,7 +26,7 @@
 @implementation CASFileObjectQueue
 
 - (instancetype)initWithRelativePath:(NSString *)filePath error:(NSError * __autoreleasing * _Nullable)error {
-    NSArray<NSString *> *directoryPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray<NSString *> *directoryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString *absolutePath = [NSString stringWithFormat:@"%@/%@", directoryPaths[0], filePath];
     return [self initWithAbsolutePath:absolutePath error:error];
 }
