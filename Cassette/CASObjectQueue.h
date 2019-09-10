@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface CASObjectQueue<T: id<NSCoding>> : NSObject
 
-- (instancetype)init NS_UNAVAILABLE;
-
 /**
  * Adds an element to the end of the queue.
  */
