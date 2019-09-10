@@ -12,6 +12,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * A queue of objects that is backed by a file. Objects must conform to
+ * protocol NSCoding to ensure proper serialization and deserialization.
+ */
 @interface CASFileObjectQueue<T: id<NSCoding>> : CASObjectQueue<T>
 
 /**

@@ -12,11 +12,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * Object-based wrapper for dealing with elements in a @c CASQueueFile.
+ */
 @interface CASQueueFileElement : NSObject
 
+/**
+ * The position this element starts at in the @c CASQueueFile.
+ */
 @property (nonatomic, assign) NSUInteger position;
+
+/**
+ * The amount of bytes this element occupies.
+ */
 @property (nonatomic, assign) NSUInteger length;
 
+/**
+ * Helper initializer to allocate an element such that it represents a nil element.
+ * Both position and length are initialized to zero.
+ */
 + (instancetype)null;
 - (instancetype)initAtPosition:(NSUInteger)position withLength:(NSUInteger)length NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
