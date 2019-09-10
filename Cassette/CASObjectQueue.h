@@ -12,7 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * A queue of objects. This object should not be allocated directly.
+ * It serves as a base implementation for its child classes.
+ */
 @interface CASObjectQueue<T: id<NSCoding>> : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  * Adds an element to the end of the queue.
