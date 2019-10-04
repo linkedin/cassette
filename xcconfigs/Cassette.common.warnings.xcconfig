@@ -1,345 +1,187 @@
-// Common iOS build warnings settings shared between apps/libs and debug/release
-
-// Whether warnings are treated as errors (SWIFT)
 SWIFT_TREAT_WARNINGS_AS_ERRORS = YES
 
-// Whether warnings are treated as errors (ObjC/C/C++)
 GCC_TREAT_WARNINGS_AS_ERRORS = YES
 
-// Enabling this option causes warnings about incompatible pointer types to be treated as errors.
 GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES
 
-// Causes warnings about missing function prototypes to be treated as errors. Only applies to C and Objective-C.
 GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = NO
 
-// INTERFACE BUILDER
-
-// Show errors encountered during the compilation of XIB files.
 IBC_ERRORS = YES
 
-// Show notices encountered during the compilation of XIB files.
 IBC_NOTICES = YES
 
-// Show warnings encountered during the compilation of XIB files.
 IBC_WARNINGS = YES
 
-// ASSET CATALOG
-
-// Show notices encountered during the compilation of asset catalogs.
 ASSETCATALOG_NOTICES = YES
 
-// Show warnings encountered during the compilation of asset catalogs.
 ASSETCATALOG_WARNINGS = YES
 
-
-// CLANG WARNINGS
-
-// Warn about loop bodies that are suspiciously empty.
 CLANG_WARN_EMPTY_BODY = YES
 
-// Warn when a call to an `NSLocalizedString()` macro is missing a context comment for the localizer.
 CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = YES
 
-// Warn about implicit ownership types on Objective-C object references as out parameters.
-// For example, declaring a parameter with type `NSObject**` will produce a warning because the compiler will assume that the out parameter's ownership type is `__autoreleasing`.
 CLANG_WARN_OBJC_EXPLICIT_OWNERSHIP_TYPE = YES
 
-// Warn about non-literal expressions that evaluate to zero being treated as a null pointer.
 CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES
 
-// Warn about implicit capture of self (e.g. direct ivar access)
 CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES
 
-// Don't warn about repeatedly using a weak reference without assigning the weak reference to a strong reference. Too many false positives.
 CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES
 
-// Warn about implicit conversions from Objective-C literals to values of incompatible type.
 CLANG_WARN_OBJC_LITERAL_CONVERSION = YES
 
-// Warn about using `__bridge` casts when not using ARC, where they have no effect.
 CLANG_WARN__ARC_BRIDGE_CAST_NONARC = YES
 
-// Warn about `@property` declarations that are implicitly atomic.
 CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES
 
-// Whether to warn when overriding deprecated methods
 CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES
 
-// Warn about destructors for C++ objects that are called when an application is terminating.
 CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES
 
-// When compiling C++ code using a language standard older than C++11, warn about the use of C++11 extensions.
 CLANG_WARN_CXX0X_EXTENSIONS = YES
 
-// Set to NO because we would not want to do manual synthesize
 CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = NO
 
-// Warn about suspicious uses of the comma operator.
 CLANG_WARN_COMMA = YES
 
-// Warn about implicit conversions to boolean values that are suspicious.
-// For example, writing 'if (foo)' with 'foo' being the name a function will trigger a warning.
 CLANG_WARN_BOOL_CONVERSION = YES
 
-// Warn about block captures of implicitly autoreleasing parameters.
 CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES
 
-// Warn about implicit conversions of constant values that cause the constant value to change,
-// either through a loss of precision, or entirely in its meaning.
 CLANG_WARN_CONSTANT_CONVERSION = YES
 
-// Warn about implicit conversions between different kinds of enum values.
-// For example, this can catch issues when using the wrong enum flag as an argument to a function or method.
 CLANG_WARN_ENUM_CONVERSION = YES
 
-// Warn about implicit conversions between pointers and integers.
-// For example, this can catch issues when one incorrectly intermixes using NSNumbers and raw integers.
 CLANG_WARN_INT_CONVERSION = YES
 
-// Warn about potentially unreachable code
 CLANG_WARN_UNREACHABLE_CODE = YES
 
-// Warn about direct accesses to the Objective-C 'isa' pointer instead of using a runtime API.
 CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
 
-// Warn about declaring the same method more than once within the same @interface.
 CLANG_WARN__DUPLICATE_METHOD_MATCH = YES
 
-// Warn about classes that unintentionally do not subclass a root class (such as NSObject).
 CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
 
-// This warnings detects when a function will recursively call itself on every
-// code path though that function. More information can be found here:
-// http://lists.llvm.org/pipermail/cfe-commits/Week-of-Mon-20131216/096004.html
 CLANG_WARN_INFINITE_RECURSION = YES
 
-// Whether to warn on implicit conversions between signed/unsigned types
 CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES
 
-// Warn about assigning integer constants to enum values that are out of the range of the enumerated type.
 CLANG_WARN_ASSIGN_ENUM = YES
 
-// Warn about ranged-based for loops.
 CLANG_WARN_RANGE_LOOP_ANALYSIS = YES
 
-// Whether to warn on suspicious implicit conversions
 CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES
 
-// This warning detects suspicious uses of std::move.
 CLANG_WARN_SUSPICIOUS_MOVE = YES
 
-// Warn about incorrect uses of nullable values
 CLANG_WARN_NULLABLE_TO_NONNULL_CONVERSION = YES
 
-// Warn about non-prototype declarations
 CLANG_WARN_STRICT_PROTOTYPES = YES
 
-// Warn if an API that is newer than the deployment target is used without "if (@available(...))" guards.
 CLANG_WARN_UNGUARDED_AVAILABILITY = YES
 
-// Warns about issues in documentation comments (`doxygen`-style) such as missing or incorrect documentation tags.
 CLANG_WARN_DOCUMENTATION_COMMENTS = YES
 
-// Warn about implicit conversions that turn floating-point numbers into integers.
 CLANG_WARN_FLOAT_CONVERSION = YES
 
-// Warns when an atomic is used with an implicitly sequentially-consistent memory order, instead of explicitly specifying memory order.
-// TOOLS-220931: enable when ready
-// CLANG_WARN_ATOMIC_IMPLICIT_SEQ_CST = YES
-
-// Warns when a quoted include is used instead of a framework style include in a framework header.
-// TOOLS-220931: enable when ready
-// CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES
-
-// This warning detects violations where public headers in a framework #import or #include private headers.
-// TOOLS-220931: enable when ready
-// CLANG_WARN_FRAMEWORK_INCLUDE_PRIVATE_FROM_PUBLIC = YES
-
-// This warning detects the use @import in framework headers when the -fmodules flag is passed.
-// TOOLS-220931: enable when ready
-// CLANG_WARN_AT_IMPORT_IN_FRAMEWORK_HEADER = YES
-
-// This warning detects when omitting the framework keyword when declaring a module for a framework.
-// TOOLS-220931: enable when ready
-// CLANG_WARN_INCOMPLETE_FRAMEWORK_MODULE_DECLARATION = YES
-
-// GCC WARNINGS
-
-// Warn if multiple methods with differing argument and/or return types are found for a given selector when attempting to send a message using this selector to a receiver of type `id` or `Class`.
-// When this setting is disabled, the compiler will omit such warnings if any differences found are confined to types that share the same size and alignment.
 GCC_WARN_STRICT_SELECTOR_MATCH = YES
 
-// Warn when a class declares an nonvirtual destructor that should probably be virtual, because it looks like the class will be used polymorphically. This is only active for C++ or Objective-C++ sources.
 GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES
 
-// Warn when a function declaration hides virtual functions from a base class.
-// This setting only applies to C++ and Objective-C++ sources.
 GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES
 
-// Warn whenever a local variable shadows another local variable, parameter or global variable or whenever a builtin function is shadowed.
 GCC_WARN_SHADOW = YES
 
-// Whether to warn about labels that are unused
 GCC_WARN_UNUSED_LABEL = YES
 
-// Warn whenever a function parameter is unused aside from its declaration.
 GCC_WARN_UNUSED_PARAMETER = YES
 
-// Whether to warn about 64-bit values being implicitly shortened to 32 bits
 GCC_WARN_64_TO_32_BIT_CONVERSION = YES
 
-// Whether to warn about missing function prototypes - this requires prototypes for fileprivate C functions.
 GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO
 
-// Whether to warn about implicit conversions in the signedness of the type
-// a pointer is pointing to (e.g., 'int *' getting converted to 'unsigned int *')
 GCC_WARN_ABOUT_POINTER_SIGNEDNESS = YES
 
-// Whether to warn when the value returned from a function/method/block does not
-// match its return type
 GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR
 
-// Warn if a variable might be clobbered by a setjmp call or if an automatic variable is used without prior initialization.
 GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE
 
-// Whether to warn about static functions that are unused
 GCC_WARN_UNUSED_FUNCTION = YES
 
-// Whether to warn about variables that are never used
 GCC_WARN_UNUSED_VARIABLE = YES
 
-// Warn if a "@selector(...)" expression referring to an undeclared selector is found
 GCC_WARN_UNDECLARED_SELECTOR = YES
 
-// Whether to warn about the use of four-character constants
 GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES
 
-// Whether to warn when switching on an enum value, and all possibilities are
-// not accounted for
 GCC_WARN_CHECK_SWITCH_STATEMENTS = YES
 
-// Whether to warn on a class not implementing all the required methods of
-// a protocol it declares conformance to
 GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES
 
-// Whether to warn about an aggregate data type's initializer not being fully
-// bracketed (e.g., array initializer syntax)
 GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES
 
-// Whether to warn about fields missing from structure initializers (only if
-// designated initializers aren't used)
-// https://jira01.corp.linkedin.com:8443/browse/VOYINF-19190 -
-// This change was made to support structs that do not initialize each field.
-// Specifically in the case of supporting a 3rd party lib that follows this practice.
 GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = NO
 
-// Whether to warn about unsafe comparisons between values of different
-// signedness
 GCC_WARN_SIGN_COMPARE = YES
 
-// Warn about the use of deprecated functions, variables, and types (as indicated by the `deprecated` attribute).
 GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES
 
-// Whether to warn about the arguments to printf-style functions not matching
-// the format specifiers
 GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES
 
-// Whether to warn about missing braces or parentheses that make the meaning of
-// the code ambiguous
 GCC_WARN_MISSING_PARENTHESES = YES
 
-// Unchecking this setting will suppress warnings from applying the `offsetof` macro to a non-POD type
 GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES
 
-// This triggers warnnings for GNU C/C++ extensions that we want to be able to use
 GCC_WARN_PEDANTIC = NO
 
-// Warn whenever a statement computes a result that is explicitly not used.
 GCC_WARN_UNUSED_VALUE = YES
 
-// Warn when a `#pragma` directive is encountered that is not understood by GCC.
 GCC_WARN_UNKNOWN_PRAGMAS = YES
 
-// Warn when a source file does not end with a newline.
 GCC_WARN_ABOUT_MISSING_NEWLINE = NO
 
-
-// ANALYZER
-
-// Whether to warn when a floating-point value is used as a loop counter
 CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES
 
-// Whether to warn about use of rand() and random() being used instead of arc4random()
 CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES
 
-// Whether to warn about strcpy() and strcat()
 CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 
-// Warn if functions accepting `CFErrorRef` or `NSError` cannot indicate that an error occurred.
 CLANG_ANALYZER_OBJC_NSCFERROR = YES
 
-// Warn if `CF` collections are created with non-pointer-size values.
-// Check if `NS` collections are initialized with non-Objective-C type elements.
 CLANG_ANALYZER_OBJC_COLLECTIONS = YES
 
-// Check for misuses of the Grand Central Dispatch API.
 CLANG_ANALYZER_GCD = YES
 
-// Warn when a number object, such as an instance of `NSNumber`, `CFNumberRef`, `OSNumber`, or `OSBoolean` is compared or converted to a primitive value instead of another object.
 CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES
 
-// Check for values stored to variables and never read again.
 CLANG_ANALYZER_DEADCODE_DEADSTORES = YES
 
-// Warn about memory leaks, use-after-free, and other API misuses.
 CLANG_ANALYZER_MEMORY_MANAGEMENT = YES
 
-// Warn on `nil` pointers used as mutexes for `@synchronized`.
 CLANG_ANALYZER_OBJC_ATSYNC = YES
 
-// Warn about Objective-C method signatures with type incompatibilities.
 CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES
 
-// Warn if a specialized generic type is converted to an incompatible type.
 CLANG_ANALYZER_OBJC_GENERICS = YES
 
-// Warn about private ivars that are never used.
 CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES
 
-// Check that `super init` is properly called within an Objective-C initialization method.
 CLANG_ANALYZER_OBJC_SELF_INIT = YES
 
-// Warn on leaks and improper reference count management.
 CLANG_ANALYZER_OBJC_RETAIN_COUNT = YES
 
-
-// SECURITY
-
-// Check for misuse of the Keychain Services API.
 CLANG_ANALYZER_SECURITY_KEYCHAIN_API = YES
 
-// Warn on uses of sensitive functions whose return values must be always checked.
 CLANG_ANALYZER_SECURITY_INSECUREAPI_UNCHECKEDRETURN = YES
 
-// Warn on uses of `getpw` and `gets`. The functions are dangerous as they may trigger a buffer overflow.
 CLANG_ANALYZER_SECURITY_INSECUREAPI_GETPW_GETS = YES
 
-// Warn on uses of `mktemp`, which produces predictable temporary files. It is obsoleted by `mktemps`.
-// Warn when `mkstemp` is passed fewer than 6 `X`'s in the format string.
 CLANG_ANALYZER_SECURITY_INSECUREAPI_MKSTEMP = YES
 
-// Warn on uses of the `vfork` function, which is inherently insecure. Use the safer `posix_spawn` function instead.
 CLANG_ANALYZER_SECURITY_INSECUREAPI_VFORK = YES
 
-// Warn for missing nullability attributes
 CLANG_ANALYZER_NONNULL = YES
 
-// Warn when an instance is improperly cleaned up in `-dealloc`.
 CLANG_ANALYZER_OBJC_DEALLOC = YES
 
-// Warn when a non-localized string is passed to a user-interface method expecting a localized string
 CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
-
-// ADDITIONAL FLAGS
-// TODO TOOLS-179439: enable when ready
-// WARNING_CFLAGS = -Wobjc-interface-ivars -Wsemicolon-before-method-body
