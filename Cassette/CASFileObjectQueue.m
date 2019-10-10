@@ -54,12 +54,28 @@
     [self.queueFile add:[NSKeyedArchiver archivedDataWithRootObject:data]];
 }
 
+- (void)addArchived:(NSData *)data {
+    [self.queueFile add:data];
+}
+
+- (NSData *)peekArchivedData {
+    NSArray<id> *elements = [self peek:1 archived:YES];
+    if (elements.count > 0) {
+        return elements[0];
+    }
+    return nil;
+}
+
 - (NSArray<id> *)peek:(NSUInteger)amount {
+    return [self peek:amount archived:NO];
+}
+
+- (NSArray<id> *)peek:(NSUInteger)amount archived:(BOOL)archived {
     NSArray<NSData *> *elements = [self.queueFile peek:amount];
     NSMutableArray<id> *coercedElements = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < elements.count; i++) {
         NSData *element = elements[i];
-        id coercedElement = [NSKeyedUnarchiver unarchiveObjectWithData:element];
+        id coercedElement = archived ? element : [NSKeyedUnarchiver unarchiveObjectWithData:element];
         if (coercedElement != nil) {
             [coercedElements addObject:coercedElement];
         }

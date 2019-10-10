@@ -34,6 +34,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init NS_UNAVAILABLE;
 
+/**
+ * Returns the head of the queue as archived data, or nil if the queue is empty. Does not modify the
+ * queue.
+ */
+- (NSData *)peekArchivedData;
+
+/**
+ * Adds an archived element to the end of the queue.
+ */
+- (void)addArchived:(NSData *)data;
+
 @end
 
 NS_ASSUME_NONNULL_END
