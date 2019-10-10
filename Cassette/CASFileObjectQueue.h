@@ -21,12 +21,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Initializes an @c CASFileObjectQueue with a file in the application's Library directory,
  * returning nil if there was an error.
+ * Note: If target and intermediary directories do not exist in path they will be created.
  */
 - (nullable instancetype)initWithRelativePath:(NSString *)filePath error:(NSError * __autoreleasing * _Nullable)error;
 
 /**
  * Initializes an @c CASFileObjectQueue with a file at the specified path,
  * returning nil if there was an error.
+ * Note: If target and intermediary directories do not exist in path they will be created.
  */
 - (nullable instancetype)initWithAbsolutePath:(NSString *)filePath error:(NSError * __autoreleasing * _Nullable)error;
 

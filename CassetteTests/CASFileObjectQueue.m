@@ -20,19 +20,117 @@
 
 @implementation CASFileObjectQueueTests
 
+#pragma mark - constants
+
+- (NSString *)defaultWritePath {
+    return [NSTemporaryDirectory() stringByAppendingPathComponent:@"testing/"];
+}
+
+#pragma mark - setup
+
 - (void)setUp {
     NSError *error;
-    CASFileObjectQueue<NSNumber *> *queue = [[CASFileObjectQueue alloc] initWithAbsolutePath:[NSString stringWithFormat:@"%@/testfile",
-                                                                                                    NSTemporaryDirectory()]
-                                                                                             error:&error];
-    if (error != nil) {
-        XCTFail();
-    }
+    NSString *testFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"testfile"];
+
+    [[NSFileManager defaultManager] removeItemAtPath:[self defaultWritePath] error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:testFilePath error:nil];
+
+    CASFileObjectQueue<NSNumber *> *queue = [[CASFileObjectQueue alloc] initWithAbsolutePath:testFilePath
+                                                                                       error:&error];
+    XCTAssertNil(error, @"error during setup: %@", error.localizedDescription);
     self.queue = queue;
 }
 
 - (void)tearDown {
     [self.queue clear];
+}
+
+#pragma mark - tests
+
+- (void)testQueueCreationRelativePath {
+    NSString *relPath = @"testing";
+    NSArray<NSString *> *directoryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+
+    [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@",directoryPaths[0], relPath]
+                                               error:nil];
+    NSError *error;
+    CASFileObjectQueue<NSNumber *> *queue;
+    NSString *path;
+
+    error = nil;
+    path = relPath;
+    queue = [[CASFileObjectQueue alloc] initWithRelativePath:path error:&error];
+    XCTAssertNil(error, @"error creating queue at path: %@\n error: %@", path, error.localizedDescription);
+    [queue add:@(1)];
+
+    [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@",directoryPaths[0], relPath]
+                                               error:nil];
+
+    error = nil;
+    path = [relPath stringByAppendingPathComponent:@"otherplace/test"];
+    queue = [[CASFileObjectQueue alloc] initWithRelativePath:path error:&error];
+    XCTAssertNil(error, @"error creating queue at path: %@\n error: %@", path, error.localizedDescription);
+    [queue add:@(1)];
+
+    [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@",directoryPaths[0], relPath]
+                                               error:nil];
+
+    error = nil;
+    path = [relPath stringByAppendingPathComponent:@"testfile/testfile.tmp"];
+    queue = [[CASFileObjectQueue alloc] initWithRelativePath:path error:&error];
+    XCTAssertNil(error, @"error creating queue at path: %@\n error: %@", path, error.localizedDescription);
+    [queue add:@(1)];
+
+    [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@",directoryPaths[0], relPath]
+                                               error:nil];
+
+    error = nil;
+    path = [relPath stringByAppendingPathComponent:@"otherplace/test/testfile.tmp"];
+    queue = [[CASFileObjectQueue alloc] initWithRelativePath:path error:&error];
+    XCTAssertNil(error, @"error creating queue at path: %@\n error: %@", path, error.localizedDescription);
+    [queue add:@(1)];
+}
+
+- (void)testQueueCreationAbsolutePath {
+    NSError *error;
+    CASFileObjectQueue<NSNumber *> *queue;
+    NSString *path;
+
+    [[NSFileManager defaultManager] removeItemAtPath:[self defaultWritePath]
+                                               error:nil];
+
+    error = nil;
+    path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"testing/"];
+    queue = [[CASFileObjectQueue alloc] initWithAbsolutePath:path error:&error];
+    XCTAssertNil(error, @"error creating queue at path: %@\n error: %@", path, error.localizedDescription);
+    [queue add:@(1)];
+
+    [[NSFileManager defaultManager] removeItemAtPath:[self defaultWritePath]
+                                               error:nil];
+
+    error = nil;
+    path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"testing/otherplace/test"];
+    queue = [[CASFileObjectQueue alloc] initWithAbsolutePath:path error:&error];
+    XCTAssertNil(error, @"error creating queue at path: %@\n error: %@", path, error.localizedDescription);
+    [queue add:@(1)];
+
+    [[NSFileManager defaultManager] removeItemAtPath:[self defaultWritePath]
+                                               error:nil];
+
+    error = nil;
+    path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"testing/testfile/testfile.tmp"];
+    queue = [[CASFileObjectQueue alloc] initWithAbsolutePath:path error:&error];
+    XCTAssertNil(error, @"error creating queue at path: %@\n error: %@", path, error.localizedDescription);
+    [queue add:@(1)];
+
+    [[NSFileManager defaultManager] removeItemAtPath:[self defaultWritePath]
+                                               error:nil];
+    
+    error = nil;
+    path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"testing/otherplace/test/testfile.tmp"];
+    queue = [[CASFileObjectQueue alloc] initWithAbsolutePath:path error:&error];
+    XCTAssertNil(error, @"error creating queue at path: %@\n error: %@", path, error.localizedDescription);
+    [queue add:@(1)];
 }
 
 - (void)testSizeReflectsObjectsAdded {

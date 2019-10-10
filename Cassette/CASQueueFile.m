@@ -107,11 +107,22 @@ static NSUInteger const ElementHeaderLength = 4;
     NSError *tapeError;
 
     // Use a temporary file so we don't leave a partially-initialized file.
-    NSString *tempPath = [NSString stringWithFormat:@"%@.tmp", path];
+    NSString *tempPath = [path stringByAppendingPathExtension:@"tmp"];
 
     // Write the initial set of data for the file
     NSMutableData *fileBuffer = [NSMutableData dataWithLength:QueueFileInitialLength];
     writeInt(fileBuffer, 0, QueueFileInitialLength);
+
+    NSString *folderPath = [path stringByDeletingLastPathComponent];
+
+    if (![fileManager fileExistsAtPath:folderPath]
+        && ![fileManager createDirectoryAtPath:folderPath
+                   withIntermediateDirectories:YES
+                                    attributes:nil
+                                         error:&tapeError]) {
+        tapeError = [CASError createError:CASErrorFileInitialization];
+        CASLOG(@"Failed to create directory, perhaps out of space at path: %@", folderPath);
+    }
 
     if (![fileManager createFileAtPath:tempPath
                               contents:fileBuffer
