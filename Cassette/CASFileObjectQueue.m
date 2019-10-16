@@ -9,7 +9,7 @@
 //  See the License for the specific language governing permissions and limitations under the License.
 
 #import "CASFileObjectQueue.h"
-
+#import "CASPrivateConstants.h"
 #import "CASQueueFile.h"
 
 @interface CASFileObjectQueue ()
@@ -55,7 +55,7 @@
     NSMutableArray<id> *coercedElements = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < elements.count; i++) {
         NSData *element = elements[i];
-        id coercedElement = [NSKeyedUnarchiver unarchiveObjectWithData:element];
+        id coercedElement = [self unarchiveData:element];
         if (coercedElement != nil) {
             [coercedElements addObject:coercedElement];
         }
@@ -73,6 +73,27 @@
 
 - (void)clear {
     [self.queueFile clear];
+}
+
+#pragma mark - Helper Method
+
+- (nullable id)unarchiveData:(NSData *)data {
+    id result;
+
+    if (@available(iOS 11.0, macOS 10.13, *)) {
+        NSError *error;
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc]
+                                         initForReadingFromData:data
+                                         error:&error];
+        [unarchiver setRequiresSecureCoding:NO];
+        result = [unarchiver decodeObjectForKey:NSKeyedArchiveRootObjectKey];
+        if (error != nil) {
+            CASLOG(@"error unarchiving data: %@", error.localizedDescription);
+        }
+    } else {
+        result = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
+    return result;
 }
 
 @end
