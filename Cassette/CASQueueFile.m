@@ -107,24 +107,49 @@ static NSUInteger const ElementHeaderLength = 4;
     NSError *tapeError;
 
     // Use a temporary file so we don't leave a partially-initialized file.
-    NSString *tempPath = [NSString stringWithFormat:@"%@.tmp", path];
+    NSString *tempPath = [path stringByAppendingPathExtension:@"tmp"];
 
     // Write the initial set of data for the file
     NSMutableData *fileBuffer = [NSMutableData dataWithLength:QueueFileInitialLength];
     writeInt(fileBuffer, 0, QueueFileInitialLength);
+
+    BOOL isDirectory = YES;
+
+    NSString *folderPath = [path stringByDeletingLastPathComponent];
+
+    BOOL doesFolderExistAlready = [fileManager fileExistsAtPath:folderPath
+                                                    isDirectory:&isDirectory];
+
+    if (!doesFolderExistAlready) {
+        tapeError = [CASError createError:CASErrorFileInitialization];
+        CASLOG(@"Creation of intermediary directories is not supported, please create folder path: %@", folderPath);
+        [CASError handleError:tapeError error:error];
+        return;
+    }
+
+    if (!isDirectory) {
+        tapeError = [CASError createError:CASErrorFileInitialization];
+        CASLOG(@"Could not create file because base directory is a file!: %@", folderPath);
+        [CASError handleError:tapeError error:error];
+        return;
+    }
 
     if (![fileManager createFileAtPath:tempPath
                               contents:fileBuffer
                             attributes:nil]) {
         tapeError = [CASError createError:CASErrorFileInitialization];
         CASLOG(@"%@", [NSString stringWithFormat:@"Could not initialize file at path: %@.", tempPath]);
+        [CASError handleError:tapeError error:error];
+        return;
     }
 
-    if (![fileManager moveItemAtPath:tempPath toPath:path error:&tapeError]) {
+    if (![fileManager moveItemAtPath:tempPath
+                              toPath:path
+                               error:error]) {
         CASLOG(@"Could not move file from %@ to %@.", path, tempPath);
+        [CASError handleError:tapeError error:error];
+        return;
     }
-
-    [CASError handleError:tapeError error:error];
 }
 
 - (instancetype)initWithPath:(NSString *)filePath
