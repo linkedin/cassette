@@ -25,7 +25,7 @@
     CASQueueFile *queueFile = [CASQueueFile queueFileWithPath:[NSString stringWithFormat:@"%@/CASQueueFileTests-storage", NSTemporaryDirectory()]
                                                               error:&error];
     if (error != nil) {
-        XCTFail(@"CASQueueFile could not be initialized.");
+        XCTFail(@"CASQueueFile could not be initialized. error: %@", error);
     }
     self.queueFile = queueFile;
 }

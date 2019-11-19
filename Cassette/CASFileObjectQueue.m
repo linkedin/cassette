@@ -27,7 +27,7 @@
 
 - (instancetype)initWithRelativePath:(NSString *)filePath error:(NSError * __autoreleasing * _Nullable)error {
     NSArray<NSString *> *directoryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-    NSString *absolutePath = [NSString stringWithFormat:@"%@/%@", directoryPaths[0], filePath];
+    NSString *absolutePath = [directoryPaths[0] stringByAppendingPathComponent:filePath];
     return [self initWithAbsolutePath:absolutePath error:error];
 }
 
