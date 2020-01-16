@@ -152,7 +152,10 @@
 }
 
 - (void)testAddingAndRemovingElementsWhileFragmentedAndFull {
-    [self triggerStressedFragmentation];
+    NSUInteger numElementsToStartWith = 10;
+    NSUInteger numElementsToRemove = numElementsToStartWith / 2;
+    [self triggerStressedFragmentation:numElementsToStartWith
+                                                   numElementsToRemove:numElementsToRemove];
     NSUInteger originalSize = self.queueFile.size;
 
     NSUInteger numElements = 10;
@@ -174,28 +177,48 @@
     }
 }
 
-- (void)triggerStressedFragmentation {
+- (void)testRingReadingElementsMaintainsCorrectness {
+    NSUInteger numElementsToStartWith = 10;
+    NSUInteger numElementsToRemove = numElementsToStartWith / 2;
+    NSArray<NSData *> * dataArray = [self triggerStressedFragmentation:numElementsToStartWith
+                                                   numElementsToRemove:numElementsToRemove];
+    NSArray<NSData *> *elements = [self.queueFile peek:self.queueFile.size];
+    for (NSUInteger i = 0; i < elements.count; i++) {
+        XCTAssertEqualObjects(elements[(i + numElementsToRemove) % numElementsToStartWith],
+                              dataArray[i]);
+    }
+}
+
+- (NSMutableArray<NSData *> *)triggerStressedFragmentation:(NSUInteger)numElementsToStartWith
+                                       numElementsToRemove:(NSUInteger)numElementsToRemove {
     // Add just enough elements that it almost fills the storage
     // 4096 - 16 = 4080
     // Assumption: initial file size is 4096 - headerlength(16) = 4080
     // Assumption: element header length = 4
     NSUInteger initialFileLength = 4080;
-    NSUInteger numElementsToStartWith = 10;
     NSUInteger elementHeaderLength = 4;
-    NSUInteger sizeOfEachElement = initialFileLength / numElementsToStartWith;
-    NSData *data = [NSMutableData dataWithLength:(sizeOfEachElement - elementHeaderLength)];
+    NSUInteger sizeOfEachElement = (initialFileLength / numElementsToStartWith) - elementHeaderLength;
+    NSMutableArray<NSData *> *dataArray = [[NSMutableArray alloc] initWithCapacity:numElementsToStartWith];
+
+    // Add unique elements of data
     for (NSUInteger i = 0; i < numElementsToStartWith; i++) {
+        NSMutableData* data = [NSMutableData dataWithCapacity:sizeOfEachElement];
+        for (NSUInteger j = 0; j < sizeOfEachElement; j++) {
+            [data appendBytes:&i length:1];
+        }
         [self.queueFile add:data];
+        [dataArray addObject:data];
     }
 
     // At this point, buffer should be completely full.
     // To trigger fragmentation, let's pop a few elements and add them back in.
     // This will mean the head is now somewhere in the middle of the file, as well as the tail.
-    NSUInteger numElementsToRemove = numElementsToStartWith / 2;
     [self.queueFile pop:numElementsToRemove];
     for (NSUInteger i = 0; i < numElementsToRemove; i++) {
-        [self.queueFile add:data];
+        [self.queueFile add:dataArray[i]];
     }
+
+    return dataArray;
 }
 
 @end
