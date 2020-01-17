@@ -330,9 +330,9 @@ static NSUInteger const ElementHeaderLength = 4;
     }
 
     // The requested read overlaps the EOF, so we need to read through to the EOF, wrap around, and read the remaining bytes
-    NSMutableData *buffer = [NSMutableData dataWithLength:count];
+    NSMutableData *buffer = [NSMutableData dataWithCapacity:count];
     NSUInteger numBytesBeforeEOF = self.fileLength - position;
-    [self.fileHandle seekToFileOffset:numBytesBeforeEOF];
+    [self.fileHandle seekToFileOffset:position];
     [buffer appendData:[self.fileHandle readDataOfLength:numBytesBeforeEOF]];
     [self.fileHandle seekToFileOffset:QueueFileHeaderLength];
     [buffer appendData:[self.fileHandle readDataOfLength:count - numBytesBeforeEOF]];
