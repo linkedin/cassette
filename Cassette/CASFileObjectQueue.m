@@ -47,7 +47,21 @@
 }
 
 - (void)add:(id)data {
-    [self.queueFile add:[NSKeyedArchiver archivedDataWithRootObject:data]];
+    NSError *error;
+    NSData *serializedData;
+    if (@available(iOS 11.0, macOS 10.13, *)) {
+        serializedData = [NSKeyedArchiver archivedDataWithRootObject:data
+                                               requiringSecureCoding:NO
+                                                               error:&error];
+    } else {
+        serializedData = [NSKeyedArchiver archivedDataWithRootObject:data];
+    }
+
+    if (error != nil) {
+        CASLOG(@"error serializing data: %@", error.localizedDescription);
+    } else {
+        [self.queueFile add:serializedData];
+    }
 }
 
 - (NSArray<id> *)peek:(NSUInteger)amount {
