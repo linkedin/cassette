@@ -21,7 +21,7 @@
 		3C4A836A2311DC8500D06FAE /* CASObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A83692311DC8500D06FAE /* CASObjectQueue.m */; };
 		3C4A836C2311DCCC00D06FAE /* CASFileObjectQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4A836B2311DCCC00D06FAE /* CASFileObjectQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3C4A836E2311DD1800D06FAE /* CASFileObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A836D2311DD1800D06FAE /* CASFileObjectQueue.m */; };
-		3C4A83702311DD4000D06FAE /* CASFileObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A836F2311DD4000D06FAE /* CASFileObjectQueue.m */; };
+		3C4A83702311DD4000D06FAE /* CASFileObjectQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A836F2311DD4000D06FAE /* CASFileObjectQueueTests.m */; };
 		3C4A8376231306D000D06FAE /* CASInMemoryObjectQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4A8375231306D000D06FAE /* CASInMemoryObjectQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3C4A8378231306FA00D06FAE /* CASInMemoryObjectQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A8377231306FA00D06FAE /* CASInMemoryObjectQueue.m */; };
 		3C4A837A2313075000D06FAE /* CASInMemoryObjectQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4A83792313075000D06FAE /* CASInMemoryObjectQueueTests.m */; };
@@ -67,7 +67,7 @@
 		3C4A83692311DC8500D06FAE /* CASObjectQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASObjectQueue.m; sourceTree = "<group>"; };
 		3C4A836B2311DCCC00D06FAE /* CASFileObjectQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CASFileObjectQueue.h; sourceTree = "<group>"; };
 		3C4A836D2311DD1800D06FAE /* CASFileObjectQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASFileObjectQueue.m; sourceTree = "<group>"; };
-		3C4A836F2311DD4000D06FAE /* CASFileObjectQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASFileObjectQueue.m; sourceTree = "<group>"; };
+		3C4A836F2311DD4000D06FAE /* CASFileObjectQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASFileObjectQueueTests.m; sourceTree = "<group>"; };
 		3C4A8375231306D000D06FAE /* CASInMemoryObjectQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CASInMemoryObjectQueue.h; sourceTree = "<group>"; };
 		3C4A8377231306FA00D06FAE /* CASInMemoryObjectQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASInMemoryObjectQueue.m; sourceTree = "<group>"; };
 		3C4A83792313075000D06FAE /* CASInMemoryObjectQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASInMemoryObjectQueueTests.m; sourceTree = "<group>"; };
@@ -205,7 +205,7 @@
 			children = (
 				6E126C001B1F816300856CCA /* Supporting Files */,
 				6E126C021B1F816300856CCA /* CASQueueFileTests.m */,
-				3C4A836F2311DD4000D06FAE /* CASFileObjectQueue.m */,
+				3C4A836F2311DD4000D06FAE /* CASFileObjectQueueTests.m */,
 				3C4A83792313075000D06FAE /* CASInMemoryObjectQueueTests.m */,
 			);
 			path = CassetteTests;
@@ -465,7 +465,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C4A83702311DD4000D06FAE /* CASFileObjectQueue.m in Sources */,
+				3C4A83702311DD4000D06FAE /* CASFileObjectQueueTests.m in Sources */,
 				3C4A837A2313075000D06FAE /* CASInMemoryObjectQueueTests.m in Sources */,
 				6E126C031B1F816300856CCA /* CASQueueFileTests.m in Sources */,
 			);
