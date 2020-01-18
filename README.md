@@ -11,7 +11,7 @@ Cassette is a collection of queue-related classes for iOS and macOS. It is maint
 #### CocoaPods
 ```
 target 'MyApp' do
-  pod 'Cassette', '1.0.0-beta2'
+  pod 'Cassette', '1.0.0-beta3'
 end
 ```
 
