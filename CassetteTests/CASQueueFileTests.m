@@ -12,6 +12,11 @@
 
 #import "CASQueueFile.h"
 
+@interface CASQueueFile (ExposeMethods)
+void writeInt(NSMutableData *buffer, NSUInteger offset, uint32_t value);
+NSUInteger readUnsignedInt(NSData *buffer, NSUInteger offset);
+@end
+
 @interface CASQueueFileTests : XCTestCase
 
 @property (nonatomic, nullable, strong) CASQueueFile *queueFile;
@@ -219,6 +224,28 @@
     }
 
     return dataArray;
+}
+
+- (void)testReadInt {
+    NSUInteger value = readUnsignedInt([[NSData alloc] init], 12);
+    XCTAssert(value == 0, "range outside of buffer should return 0 value");
+    const unsigned char bytes[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+    NSData *validBuffer = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+    value = readUnsignedInt(validBuffer, 12);
+    XCTAssert(value == 269422093, "should be valid value in range");
+}
+
+- (void)testWriteInt {
+    const unsigned char bytes[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    NSMutableData *buffer = [NSMutableData dataWithBytes:bytes length:sizeof(bytes)];
+    NSUInteger value;
+    value = readUnsignedInt([[NSMutableData alloc] init], 1);
+    XCTAssert(value == 0, @"invalid value written and read.");
+    value = readUnsignedInt(buffer, 1);
+    XCTAssert(value == 0, @"invalid value written and read.");
+    writeInt(buffer, 1, 84148994);
+    value = readUnsignedInt(buffer, 1);
+    XCTAssert(value == 84148994, @"invalid value written and read.");
 }
 
 @end
