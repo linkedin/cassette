@@ -504,6 +504,11 @@ static NSUInteger const ElementHeaderLength = 4;
  * Stores a 32-bit integer @c value in the @c buffer at the given @c offset.
  */
 void writeInt(NSMutableData *buffer, NSUInteger offset, uint32_t value) {
+    BOOL hasValidRange = buffer.length >= offset + 4;
+    if (!hasValidRange) {
+        [NSException raise:NSRangeException
+                    format:@"writeInt buffer out of range"];
+    }
     [buffer replaceBytesInRange:NSMakeRange(offset, 4) withBytes:&value];
 }
 
@@ -511,7 +516,12 @@ void writeInt(NSMutableData *buffer, NSUInteger offset, uint32_t value) {
  * Reads a 32-bit integer value from the @c buffer at @c offset.
  */
 NSUInteger readUnsignedInt(NSData *buffer, NSUInteger offset) {
-    uint32_t value;
+    uint32_t value = 0;
+    BOOL hasValidRange = buffer.length >= offset + 4;
+    if (!hasValidRange) {
+        [NSException raise:NSRangeException
+                    format:@"readUnsignedInt buffer out of range"];
+    }
     [buffer getBytes:&value range:NSMakeRange(offset, 4)];
     return value;
 }
