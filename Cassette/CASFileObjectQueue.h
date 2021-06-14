@@ -8,7 +8,8 @@
 //  WITHOUT WARRANTIES OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and limitations under the License.
 
-#import "CASObjectQueue.h"
+#import <Cassette/CASObjectQueue.h>
+#import <Cassette/CASDataSerializer.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,24 @@ NS_ASSUME_NONNULL_BEGIN
  * Note: Intermediate directories will not be created, create containing directory before initializing.
  */
 - (nullable instancetype)initWithAbsolutePath:(NSString *)filePath error:(NSError * __autoreleasing * _Nullable)error;
+
+/**
+ * Initializes an @c CASFileObjectQueue with a file in the application's Library directory using a custom serializer,
+ * returning nil if there was an error.
+ * Note: Intermediate directories will not be created, create containing directory before initializing.
+ */
+- (nullable instancetype)initWithRelativePath:(NSString *)filePath
+                                   serializer:(id<CASDataSerializer>)serializer
+                                        error:(NSError * __autoreleasing * _Nullable)error;
+
+/**
+ * Initializes an @c CASFileObjectQueue with a file at the specified path,  using a custom serializer,
+ * returning nil if there was an error.
+ * Note: Intermediate directories will not be created, create containing directory before initializing.
+ */
+- (nullable instancetype)initWithAbsolutePath:(NSString *)filePath
+                                   serializer:(id<CASDataSerializer>)serializer
+                                        error:(NSError * __autoreleasing * _Nullable)error;
 
 - (instancetype)init NS_UNAVAILABLE;
 

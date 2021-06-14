@@ -1,4 +1,4 @@
-//  Copyright 2016 LinkedIn Corporation
+//  Copyright 2021 LinkedIn Corporation
 //  Licensed under the BSD 2-Clause License (the "License");
 //  you may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/BSD-2-Clause
@@ -8,7 +8,21 @@
 //  WITHOUT WARRANTIES OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and limitations under the License.
 
-#import <Cassette/CASObjectQueue.h>
-#import <Cassette/CASFileObjectQueue.h>
-#import <Cassette/CASInMemoryObjectQueue.h>
+
+#import <Foundation/Foundation.h>
 #import <Cassette/CASDataSerializer.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * Default implementation for data serialization and deserialization using NSKeyedArchiver.
+ */
+@interface CASDefaultDataSerializer : NSObject<CASDataSerializer>
+
++ (instancetype)shared;
+
+- (instancetype)init NS_UNAVAILABLE;
+
+@end
+
+NS_ASSUME_NONNULL_END
