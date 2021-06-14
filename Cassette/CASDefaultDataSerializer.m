@@ -17,9 +17,14 @@
     static dispatch_once_t onceToken;
     static id instance;
     dispatch_once(&onceToken, ^{
-        instance = [[CASDefaultDataSerializer alloc] init];
+        instance = [[CASDefaultDataSerializer alloc] initPrivate];
     });
     return instance;
+}
+
+- (instancetype)initPrivate {
+    self = [super init];
+    return self;
 }
 
 - (id _Nullable)deserialize:(nonnull NSData *)data error:(NSError * _Nullable __autoreleasing * _Nullable)error {
