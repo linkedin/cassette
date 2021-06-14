@@ -11,6 +11,7 @@
 #import "CASFileObjectQueue.h"
 #import "CASPrivateConstants.h"
 #import "CASQueueFile.h"
+#import "CASDefaultDataSerializer.h"
 
 @interface CASFileObjectQueue ()
 
@@ -19,6 +20,8 @@
  */
 @property (nonatomic, nonnull, strong, readonly) CASQueueFile *queueFile;
 
+@property (nonatomic, nonnull, strong, readonly) id<CASDataSerializer> serializer;
+
 @property (nonatomic, assign) NSUInteger objectCount;
 
 @end
@@ -26,18 +29,27 @@
 @implementation CASFileObjectQueue
 
 - (instancetype)initWithRelativePath:(NSString *)filePath error:(NSError * __autoreleasing * _Nullable)error {
+    return [self initWithRelativePath:filePath serializer:[CASDefaultDataSerializer shared] error:error];
+}
+
+- (instancetype)initWithRelativePath:(NSString *)filePath serializer:(id<CASDataSerializer>)serializer error:(NSError *__autoreleasing  _Nullable *)error {
     NSArray<NSString *> *directoryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString *absolutePath = [directoryPaths[0] stringByAppendingPathComponent:filePath];
-    return [self initWithAbsolutePath:absolutePath error:error];
+    return [self initWithAbsolutePath:absolutePath serializer:serializer error:error];
 }
 
 - (instancetype)initWithAbsolutePath:(NSString *)filePath error:(NSError * __autoreleasing * _Nullable)error {
+    return [self initWithAbsolutePath:filePath serializer:[CASDefaultDataSerializer shared] error:error];
+}
+
+- (instancetype)initWithAbsolutePath:(NSString *)filePath serializer:(id<CASDataSerializer>)serializer error:(NSError *__autoreleasing  _Nullable *)error {
     if (self = [super init]) {
         CASQueueFile *queueFile = [CASQueueFile queueFileWithPath:filePath error:error];
         if (error != nil && *error != nil) {
             return nil;
         }
         _queueFile = queueFile;
+        _serializer = serializer;
     }
     return self;
 }
@@ -48,17 +60,10 @@
 
 - (void)add:(id)data {
     NSError *error;
-    NSData *serializedData;
-    if (@available(iOS 11.0, macOS 10.13, *)) {
-        serializedData = [NSKeyedArchiver archivedDataWithRootObject:data
-                                               requiringSecureCoding:NO
-                                                               error:&error];
-    } else {
-        serializedData = [NSKeyedArchiver archivedDataWithRootObject:data];
-    }
+    NSData *serializedData = [self.serializer serialize:data error:&error];
 
     if (error != nil) {
-        CASLOG(@"error serializing data: %@", error.localizedDescription);
+        CASLOG(@"Error serializing data: %@", error.localizedDescription);
     } else {
         [self.queueFile add:serializedData];
     }
@@ -69,7 +74,7 @@
     NSMutableArray<id> *coercedElements = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < elements.count; i++) {
         NSData *element = elements[i];
-        id coercedElement = [self unarchiveData:element];
+        id coercedElement = [self deserialize:element];
         if (coercedElement != nil) {
             [coercedElements addObject:coercedElement];
         }
@@ -91,22 +96,13 @@
 
 #pragma mark - Helper Method
 
-- (nullable id)unarchiveData:(NSData *)data {
-    id result;
-
-    if (@available(iOS 11.0, macOS 10.13, *)) {
-        NSError *error;
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc]
-                                         initForReadingFromData:data
-                                         error:&error];
-        [unarchiver setRequiresSecureCoding:NO];
-        result = [unarchiver decodeObjectForKey:NSKeyedArchiveRootObjectKey];
-        if (error != nil) {
-            CASLOG(@"error unarchiving data: %@", error.localizedDescription);
-        }
-    } else {
-        result = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+- (nullable id)deserialize:(NSData *)data {
+    NSError *error;
+    id result = [self.serializer deserialize:data error:&error];
+    if (error != nil) {
+        CASLOG(@"Error deserializing data: %@", error.localizedDescription);
     }
+
     return result;
 }
 
