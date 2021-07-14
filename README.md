@@ -34,26 +34,32 @@ queue = [[CASInMemoryObjectQueue alloc] init];
 
 Add some data to the end of the queue.
 ```
-[queue add:@1];
+NSError *error;
+if ([queue add:@1 error:&error]) {
+  // Success
+} else {
+  NSLog(@"Error: %@", error);
+}
 ```
 
 Read data at the head of the queue.
 ```
-// Peek the eldest element.
-NSNumber *data = [queue peek];
+// Peek the eldest element. Note that -peek:error: on an empty queue
+// returns @[], but on error (e.g., I/O error) it returns nil.
+NSNumber *data = [queue peek:1 error:&error].firstObject;
 
 // Peek the eldest `n` elements.
-NSArray<NSNumber *> *data = [queue peek:n];
+NSArray<NSNumber *> *data = [queue peek:n error:&error];
 ```
 
 Remove processed elements.
 ```
 // Remove the eldest element.
-[queue pop];
+if ([queue pop:1 error:&error]) { ... }
 
 // Remove 'n' elements.
-[queue pop:n];
+if ([queue pop:n error:&error]) { ... }
 
 // Remove all elements.
-[queue clear];
+if ([queue clearAndReturnError:&error]) { ... }
 ```

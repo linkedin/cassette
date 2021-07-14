@@ -58,49 +58,57 @@
     return self.queueFile.size;
 }
 
-- (void)add:(id)data {
-    NSError *error;
-    NSData *serializedData = [self.serializer serialize:data error:&error];
+- (BOOL)add:(id)data error:(NSError * __autoreleasing * _Nullable)error {
+    NSData *serializedData = [self.serializer serialize:data error:error];
 
-    if (error != nil) {
-        CASLOG(@"Error serializing data: %@", error.localizedDescription);
+    if (!serializedData) {
+        if (error) {
+            CASLOG(@"Error serializing data: %@", *error);
+        }
+        return NO;
     } else {
-        [self.queueFile add:serializedData];
+        return [self.queueFile add:serializedData error:error];
     }
 }
 
-- (NSArray<id> *)peek:(NSUInteger)amount {
-    NSArray<NSData *> *elements = [self.queueFile peek:amount];
+- (NSArray<id> * _Nullable)peek:(NSUInteger)amount error:(NSError * __autoreleasing * _Nullable)error {
+    NSArray<NSData *> *elements = [self.queueFile peek:amount error:error];
+    if (!elements) {
+        if (error) {
+            CASLOG(@"Error peeking %zu items: %@", amount, *error);
+        }
+        return nil;
+    }
     NSMutableArray<id> *coercedElements = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < elements.count; i++) {
         NSData *element = elements[i];
-        id coercedElement = [self deserialize:element];
+        id coercedElement = [self deserialize:element error:error];
         if (coercedElement != nil) {
             [coercedElements addObject:coercedElement];
+        } else {
+            if (error) {
+                CASLOG(@"Error deserializing element %zu: %@", i, *error);
+            }
+            return nil;
         }
     }
     return coercedElements;
 }
 
-- (void)pop {
-    [self pop:1];
+- (BOOL)pop:(NSUInteger)amount error:(NSError * __autoreleasing * _Nullable)error {
+    return [self.queueFile pop:amount error:error];
 }
 
-- (void)pop:(NSUInteger)amount {
-    [self.queueFile pop:amount];
-}
-
-- (void)clear {
-    [self.queueFile clear];
+- (BOOL)clearAndReturnError:(NSError * __autoreleasing * _Nullable)error {
+    return [self.queueFile clearAndReturnError:error];
 }
 
 #pragma mark - Helper Method
 
-- (nullable id)deserialize:(NSData *)data {
-    NSError *error;
-    id result = [self.serializer deserialize:data error:&error];
-    if (error != nil) {
-        CASLOG(@"Error deserializing data: %@", error.localizedDescription);
+- (nullable id)deserialize:(NSData *)data error:(NSError * __autoreleasing * _Nullable)error {
+    id result = [self.serializer deserialize:data error:error];
+    if (!result && error) {
+        CASLOG(@"Error deserializing data: %@", *error);
     }
 
     return result;

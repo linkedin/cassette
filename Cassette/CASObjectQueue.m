@@ -12,9 +12,14 @@
 
 @implementation CASObjectQueue
 
-- (void)add:(__unused id)data {
+- (void)add:(id)data {
+    [self add:data error:NULL];
+}
+
+- (BOOL)add:(__unused id)data error:(__unused NSError * __autoreleasing * _Nullable)error {
     [NSException raise:NSInternalInconsistencyException
                 format:@"Must override LITapeObjectQueue method '%@' in subclass '%@'", NSStringFromSelector(_cmd), [self class]];
+    return NO;
 }
 
 - (NSUInteger)size {
@@ -28,30 +33,39 @@
 }
 
 - (id)peek {
-    NSArray<id> *elements = [self peek:1];
-    if (elements.count > 0) {
-        return elements[0];
-    }
+    return [self peek:1 error:NULL].firstObject;
+}
+
+- (NSArray<id> *)peek:(NSUInteger)amount {
+    return [self peek:amount error:NULL] ?: @[];
+}
+
+- (NSArray<id> * _Nullable)peek:(__unused NSUInteger)amount error:(__unused NSError * __autoreleasing * _Nullable)error {
+    [NSException raise:NSInternalInconsistencyException
+                format:@"Must override LITapeObjectQueue method '%@' in subclass '%@'", NSStringFromSelector(_cmd), [self class]];
     return nil;
 }
 
-- (NSArray<id> *)peek:(__unused NSUInteger)amount {
-    [NSException raise:NSInternalInconsistencyException
-                format:@"Must override LITapeObjectQueue method '%@' in subclass '%@'", NSStringFromSelector(_cmd), [self class]];
-    return @[];
-}
-
 - (void)pop {
-    [self pop:1];
+    [self pop:1 error:NULL];
 }
 
-- (void)pop:(__unused NSUInteger)amount {
+- (void)pop:(NSUInteger)amount {
+    [self pop:amount error:NULL];
+}
+
+- (BOOL)pop:(__unused NSUInteger)amount error:(__unused NSError * __autoreleasing * _Nullable)error {
     [NSException raise:NSInternalInconsistencyException
                 format:@"Must override LITapeObjectQueue method '%@' in subclass '%@'", NSStringFromSelector(_cmd), [self class]];
+    return NO;
 }
 
 - (void)clear {
-    [self pop:self.size];
+    [self clearAndReturnError:NULL];
+}
+
+- (BOOL)clearAndReturnError:(NSError * __autoreleasing * _Nullable)error {
+    return [self pop:self.size error:error];
 }
 
 @end
