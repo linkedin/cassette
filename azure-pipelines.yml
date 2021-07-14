@@ -8,13 +8,13 @@ pr:
     - master
 
 pool:
-  vmImage: macOS-10.14
+  vmImage: macOS-10.15
   demands: xcode
 
 variables:
   workspace: 'Cassette.xcworkspace'
   scheme: 'Cassette'
-  xcodeVersion: '10'
+  xcodeVersion: '12'
 
 steps:
 - task: CocoaPods@0
@@ -39,5 +39,4 @@ steps:
     scheme: $(scheme)
     xcodeVersion: $(xcodeVersion)
     destinationPlatformOption: 'iOS'
-    destinationSimulators: 'iPhone X'
     publishJUnitResults: true
