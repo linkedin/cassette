@@ -54,6 +54,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)add:(NSData *)data error:(NSError * __autoreleasing * _Nullable)error;
 
 /**
+ * Adds the elements to the end of the queue.
+ * Returns YES on success. On failure, returns NO and sets *error to the error.
+ */
+- (BOOL)addElements:(NSArray<NSData *> *)elements error:(NSError * __autoreleasing * _Nullable)error;
+
+/**
  * Returns the number of elements in this queue.
  */
 - (NSUInteger)size;

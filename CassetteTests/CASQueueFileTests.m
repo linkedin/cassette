@@ -82,6 +82,47 @@
     XCTAssertEqual(self.queueFile.size, expected);
 }
 
+- (void)testSizeIsUnchangedWhenAddingZeroElements {
+    XCTAssertEqual(self.queueFile.size, 0);
+    XCTAssertTrue([self.queueFile addElements:@[] error:NULL]);
+    XCTAssertEqual(self.queueFile.size, 0);
+}
+
+- (void)testSizeReflectsItemsAddedAtomically {
+    XCTAssertEqual(self.queueFile.size, 0);
+    NSMutableArray<NSData *> *elements = [NSMutableArray array];
+    NSData *data = [@"test" dataUsingEncoding:NSUTF8StringEncoding];
+    NSUInteger expected = 10;
+
+    for (NSUInteger i = 0; i < expected; i++) {
+        [elements addObject:data];
+    }
+
+    XCTAssertTrue([self.queueFile addElements:elements error:NULL]);
+    XCTAssertEqual(self.queueFile.size, expected);
+}
+
+- (void)testItemsAddedAtomicallyAreReadBackCorrectly {
+    XCTAssertEqual(self.queueFile.size, 0);
+    NSMutableArray<NSData *> *elements = [NSMutableArray array];
+    // Add more than 10 items to make sure items of different sizes work.
+    NSUInteger expected = 23;
+
+    for (NSUInteger i = 0; i < expected; i++) {
+        NSData *data = [[NSString stringWithFormat:@"%zu", i] dataUsingEncoding:NSUTF8StringEncoding];
+        [elements addObject:data];
+    }
+
+    XCTAssertTrue([self.queueFile addElements:elements error:NULL]);
+
+    // Close and re-open the queue file to make sure its contents are read back correctly.
+    XCTAssertTrue([self.queueFile closeAndReturnError:NULL]);
+    self.queueFile = [self openQueueFile];
+
+    NSArray<NSData *> *peekedElements = [self.queueFile peek:expected error:NULL];
+    XCTAssertEqualObjects(peekedElements, elements);
+}
+
 - (void)testPeekReflectsItemsAdded {
     NSString *expectedFormat = [NSString stringWithFormat:@"test @d"];
     NSUInteger numElements = 10;

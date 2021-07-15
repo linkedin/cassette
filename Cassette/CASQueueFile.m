@@ -225,41 +225,60 @@ static NSUInteger const ElementHeaderLength = 4;
 
 - (BOOL)add:(NSData *)data
       error:(NSError * __autoreleasing * _Nullable)error {
-    if (![self expandIfNecessary:data.length error:error]) {
+    return [self addElements:@[data] error:error];
+}
+
+- (BOOL)addElements:(NSArray<NSData *> *)elements error:(NSError * __autoreleasing * _Nullable)error {
+    if (!elements.count) {
+        return YES;
+    }
+
+    if (![self expandIfNecessary:elements error:error]) {
         return NO;
     }
 
-    // Insert a new element after the current last element.
+    // Insert the new element(s) after the current last element.
     BOOL wasEmpty = self.isEmpty;
     NSUInteger position = wasEmpty ? QueueFileHeaderLength : [self wrapPosition:self.last.position + self.last.length + ElementHeaderLength];
-    CASQueueFileElement *newLastElement = [[CASQueueFileElement alloc] initAtPosition:position withLength:data.length];
 
-    // Write element length.
-    writeInt(self.buffer, 0, (uint32_t) data.length);
-    if (![self ringWriteAtPosition:newLastElement.position buffer:self.buffer error:error]) {
-        return NO;
+    CASQueueFileElement *newFirstElement = nil;
+    CASQueueFileElement *newLastElement = self.last;
+
+    for (NSData *data in elements) {
+        newLastElement = [[CASQueueFileElement alloc] initAtPosition:position withLength:data.length];
+        if (!newFirstElement) {
+            newFirstElement = newLastElement;
+        }
+        // Write element length.
+        writeInt(self.buffer, 0, (uint32_t) data.length);
+        if (![self ringWriteAtPosition:newLastElement.position buffer:self.buffer synchronizeFile:NO error:error]) {
+            return NO;
+        }
+
+        // Write element's data.
+        if (![self ringWriteAtPosition:newLastElement.position + ElementHeaderLength buffer:data synchronizeFile:NO error:error]) {
+            return NO;
+        }
+        position = [self wrapPosition:newLastElement.position + newLastElement.length + ElementHeaderLength];
     }
 
-    // Write element's data.
-    if (![self ringWriteAtPosition:newLastElement.position + ElementHeaderLength buffer:data error:error]) {
-        return NO;
-    }
-
-    // Commit the addition. If wasEmpty, first == last.
-    NSUInteger firstPosition = wasEmpty ? newLastElement.position : self.first.position;
+    // Commit the addition(s).
+    NSUInteger firstPosition = wasEmpty ? newFirstElement.position : self.first.position;
     if (![self writeHeader:_fileLength
-              elementCount:_elementCount + 1
+              elementCount:_elementCount + elements.count
              firstPosition:firstPosition
               lastPosition:newLastElement.position
+           synchronizeFile:YES
                      error:error]) {
         return NO;
     }
+
     self.last = newLastElement;
-    self.elementCount++;
+    self.elementCount += elements.count;
 
     // Handle edge case where this is the first element added
     if (wasEmpty) {
-        self.first = self.last;
+        self.first = newFirstElement;
     }
 
     return YES;
@@ -340,6 +359,7 @@ static NSUInteger const ElementHeaderLength = 4;
               elementCount:self.elementCount - amount
              firstPosition:newFirstPosition
               lastPosition:self.last.position
+           synchronizeFile:NO
                      error:error]) {
         return NO;
     }
@@ -347,7 +367,7 @@ static NSUInteger const ElementHeaderLength = 4;
     self.first = [[CASQueueFileElement alloc] initAtPosition:newFirstPosition withLength:newFirstLength];
 
     // Zero out the data where the elements were removed
-    return [self ringEraseAtPosition:eraseStartPosition length:totalLengthToErase error:error];
+    return [self ringEraseAtPosition:eraseStartPosition length:totalLengthToErase synchronizeFile:YES error:error];
 }
 
 - (void)clear {
@@ -360,6 +380,7 @@ static NSUInteger const ElementHeaderLength = 4;
               elementCount:0
              firstPosition:0
               lastPosition:0
+           synchronizeFile:NO
                      error:error]) {
         return NO;
     }
@@ -371,12 +392,16 @@ static NSUInteger const ElementHeaderLength = 4;
 
    // Zero out the data in our file storage
     NSData *buffer = [NSMutableData dataWithLength:QueueFileInitialLength - QueueFileHeaderLength];
-    if (![self ringWriteAtPosition:QueueFileHeaderLength buffer:buffer error:error]) {
+    if (![self ringWriteAtPosition:QueueFileHeaderLength buffer:buffer synchronizeFile:NO error:error]) {
         return NO;
     }
 
     if (self.fileLength > QueueFileInitialLength) {
-        if (![self setFile:self.fileHandle toLength:QueueFileInitialLength error:error]) {
+        if (![self setFile:self.fileHandle toLength:QueueFileInitialLength synchronizeFile:YES error:error]) {
+            return NO;
+        }
+    } else {
+        if (![self synchronizeFile:self.fileHandle error:error]) {
             return NO;
         }
     }
@@ -456,7 +481,10 @@ static NSUInteger const ElementHeaderLength = 4;
  * Writes buffer to position in file. Automatically wraps write if position is past the end of the file
  * or if buffer overlaps it.
  */
-- (BOOL)ringWriteAtPosition:(NSUInteger)position buffer:(NSData *)buffer error:(NSError * __autoreleasing * _Nullable)error {
+- (BOOL)ringWriteAtPosition:(NSUInteger)position
+                     buffer:(NSData *)buffer
+            synchronizeFile:(BOOL)synchronizeFile
+                      error:(NSError * __autoreleasing * _Nullable)error {
     position = [self wrapPosition:position];
 
     // Handle the simple case where we don't wrap around
@@ -497,13 +525,8 @@ static NSUInteger const ElementHeaderLength = 4;
         }
     }
 
-    // Flush in-memory changes to permanent storage
-    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-        if (![self.fileHandle synchronizeAndReturnError:error]) {
-            return NO;
-        }
-    } else {
-        [self.fileHandle synchronizeFile];
+    if (synchronizeFile) {
+        [self synchronizeFile:self.fileHandle error:error];
     }
 
     return YES;
@@ -512,9 +535,12 @@ static NSUInteger const ElementHeaderLength = 4;
 /**
  * Zeroes out the file starting at @c position until @c length.
  */
-- (BOOL)ringEraseAtPosition:(NSUInteger)position length:(NSUInteger)length error:(NSError * __autoreleasing * _Nullable)error {
+- (BOOL)ringEraseAtPosition:(NSUInteger)position
+                     length:(NSUInteger)length
+            synchronizeFile:(BOOL)synchronizeFile
+                      error:(NSError * __autoreleasing * _Nullable)error {
     NSData *buffer = [NSMutableData dataWithLength:length];
-    return [self ringWriteAtPosition:position buffer:buffer error:error];
+    return [self ringWriteAtPosition:position buffer:buffer synchronizeFile:synchronizeFile error:error];
 }
 
 /**
@@ -526,6 +552,7 @@ static NSUInteger const ElementHeaderLength = 4;
        elementCount:(NSUInteger)elementCount
       firstPosition:(NSUInteger)firstPosition
        lastPosition:(NSUInteger)lastPosition
+    synchronizeFile:(BOOL)synchronizeFile
               error:(NSError * __autoreleasing * _Nullable)error
 {
     // Write header attributes to in-memory buffer
@@ -558,16 +585,15 @@ static NSUInteger const ElementHeaderLength = 4;
             }
             return NO;
         }
-        if (![self.fileHandle synchronizeAndReturnError:error]) {
-            if (error) {
-                CASLOG(@"Could not synchronize file, error: %@", *error);
-            }
-            return NO;
-        }
     } else {
         [self.fileHandle seekToFileOffset:0];
         [self.fileHandle writeData:self.buffer];
-        [self.fileHandle synchronizeFile];
+    }
+
+    if (synchronizeFile) {
+        if (![self synchronizeFile:self.fileHandle error:error]) {
+            return NO;
+        }
     }
 
     // Remove the temporary file since it's no longer necessary
@@ -586,14 +612,16 @@ static NSUInteger const ElementHeaderLength = 4;
 }
 
 /**
- * If necessary, expands the file to accommodate an additional element of the
- * given length.
+ * If necessary, expands the file to accommodate the given elements.
  *
  * Returns YES on success. On failure, returns NO and sets *error.
  */
-- (BOOL)expandIfNecessary:(NSUInteger)elementLength
+- (BOOL)expandIfNecessary:(NSArray<NSData *> *)elements
                     error:(NSError * __autoreleasing * _Nullable)error {
-    NSUInteger numBytesRequested = ElementHeaderLength + elementLength;
+    NSUInteger numBytesRequested = ElementHeaderLength;
+    for (NSData *data in elements) {
+        numBytesRequested += data.length;
+    }
     NSUInteger remainingBytes = [self remainingBytes];
 
     // The file has enough space to accomodate the new element. Return early
@@ -613,7 +641,7 @@ static NSUInteger const ElementHeaderLength = 4;
     } while (remainingBytes < numBytesRequested);
 
     // Actually expand the file
-    if (![self setFile:self.fileHandle toLength:newFileLength error:error]) {
+    if (![self setFile:self.fileHandle toLength:newFileLength synchronizeFile:NO error:error]) {
         return NO;
     }
 
@@ -645,7 +673,7 @@ static NSUInteger const ElementHeaderLength = 4;
             [self.fileHandle seekToFileOffset:self.fileLength];
             [self.fileHandle writeData:buffer];
         }
-        if (![self ringEraseAtPosition:QueueFileHeaderLength length:count error:error]) {
+        if (![self ringEraseAtPosition:QueueFileHeaderLength length:count synchronizeFile:NO error:error]) {
             return NO;
         }
     }
@@ -657,6 +685,7 @@ static NSUInteger const ElementHeaderLength = 4;
                   elementCount:self.elementCount
                  firstPosition:self.first.position
                   lastPosition:newLastPosition
+               synchronizeFile:YES
                          error:error]) {
             return NO;
         }
@@ -666,6 +695,7 @@ static NSUInteger const ElementHeaderLength = 4;
                   elementCount:self.elementCount
                  firstPosition:self.first.position
                   lastPosition:self.last.position
+               synchronizeFile:YES
                          error:error]) {
             return NO;
         }
@@ -677,7 +707,10 @@ static NSUInteger const ElementHeaderLength = 4;
 /**
  * Truncates the specified file to the new length, and commits it to persisted storage.
  */
-- (BOOL)setFile:(NSFileHandle *)fileHandle toLength:(NSUInteger)newLength error:(NSError * __autoreleasing * _Nullable)error {
+- (BOOL)setFile:(NSFileHandle *)fileHandle
+       toLength:(NSUInteger)newLength
+synchronizeFile:(BOOL)synchronizeFile
+          error:(NSError * __autoreleasing * _Nullable)error {
     if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
         if (![fileHandle truncateAtOffset:newLength error:error]) {
             if (error) {
@@ -685,15 +718,11 @@ static NSUInteger const ElementHeaderLength = 4;
             }
             return NO;
         }
-        if (![fileHandle synchronizeAndReturnError:error]) {
-            if (error) {
-                CASLOG(@"Could not synchronize file, error: %@", *error);
-            }
-            return NO;
-        }
     } else {
         [fileHandle truncateFileAtOffset:newLength];
-        [fileHandle synchronizeFile];
+    }
+    if (synchronizeFile) {
+        return [self synchronizeFile:fileHandle error:error];
     }
     return YES;
 }
@@ -718,6 +747,20 @@ static NSUInteger const ElementHeaderLength = 4;
         NSUInteger tailSpace = self.fileLength - self.first.position;
         return headSpace + tailSpace;
     }
+}
+
+- (BOOL)synchronizeFile:(NSFileHandle *)file error:(NSError * __autoreleasing * _Nullable)error {
+    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
+        if (![self.fileHandle synchronizeAndReturnError:error]) {
+            if (error) {
+                CASLOG(@"Could not synchronize file, error: %@", *error);
+            }
+            return NO;
+        }
+    } else {
+        [self.fileHandle synchronizeFile];
+    }
+    return YES;
 }
 
 /**
