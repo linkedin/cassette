@@ -210,6 +210,15 @@ static NSUInteger const ElementHeaderLength = 4;
 
 #pragma mark - Public API
 
+- (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error {
+    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
+        return [self.fileHandle closeAndReturnError:error];
+    } else {
+        [self.fileHandle closeFile];
+        return YES;
+    }
+}
+
 - (void)add:(NSData *)data {
     [self add:data error:NULL];
 }

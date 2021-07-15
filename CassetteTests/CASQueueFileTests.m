@@ -14,6 +14,7 @@
 
 @interface CASQueueFileTests : XCTestCase
 
+@property (nonatomic, copy) NSString *queueFileName;
 @property (nonatomic, nullable, strong) CASQueueFile *queueFile;
 
 @end
@@ -21,24 +22,52 @@
 @implementation CASQueueFileTests
 
 - (void)setUp {
+    // Use a unique filename for each test.
+    self.queueFileName = [NSString stringWithFormat:@"%@/CASQueueFileTests-storage-%@", NSTemporaryDirectory(), [NSUUID UUID].UUIDString];
+    self.queueFile = [self openQueueFile];
+}
+
+- (CASQueueFile *)openQueueFile {
     NSError *error;
-    CASQueueFile *queueFile = [CASQueueFile queueFileWithPath:[NSString stringWithFormat:@"%@/CASQueueFileTests-storage", NSTemporaryDirectory()]
+    CASQueueFile *queueFile = [CASQueueFile queueFileWithPath:self.queueFileName
                                                               error:&error];
     if (error != nil) {
         XCTFail(@"CASQueueFile could not be initialized. error: %@", error);
     }
-    self.queueFile = queueFile;
+    return queueFile;
 }
 
 - (void)tearDown {
     if (self.queueFile != nil) {
         XCTAssertTrue([self.queueFile clearAndReturnError:NULL]);
+        XCTAssertTrue([self.queueFile closeAndReturnError:NULL]);
+        XCTAssertTrue([NSFileManager.defaultManager removeItemAtPath:self.queueFileName error:NULL]);
     }
 }
 
 - (void)testIsEmpty {
     XCTAssertEqual(self.queueFile.size, 0);
     XCTAssertTrue(self.queueFile.isEmpty);
+}
+
+- (void)testItemsAddedAreReadBackCorrectly {
+    XCTAssertEqual(self.queueFile.size, 0);
+    // Add more than 10 items to make sure items of different sizes work.
+    NSUInteger expected = 23;
+
+    NSMutableArray<NSData *> *elements = [NSMutableArray array];
+    for (NSUInteger i = 0; i < expected; i++) {
+        NSData *data = [[NSString stringWithFormat:@"%zu", i] dataUsingEncoding:NSUTF8StringEncoding];
+        XCTAssertTrue([self.queueFile add:data error:NULL]);
+        [elements addObject:data];
+    }
+
+    // Close and re-open the queue file to make sure its contents are read back correctly.
+    XCTAssertTrue([self.queueFile closeAndReturnError:NULL]);
+    self.queueFile = [self openQueueFile];
+
+    NSArray<NSData *> *peekedElements = [self.queueFile peek:expected error:NULL];
+    XCTAssertEqualObjects(peekedElements, elements);
 }
 
 - (void)testSizeReflectsItemsAdded {
