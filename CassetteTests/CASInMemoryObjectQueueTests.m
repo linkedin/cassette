@@ -24,6 +24,11 @@
     self.queue = [[CASInMemoryObjectQueue alloc] init];
 }
 
+- (void)tearDown {
+    XCTAssertTrue([self.queue closeAndReturnError:NULL]);
+    [super tearDown];
+}
+
 - (void)testSizeReflectsObjectsAdded {
     XCTAssertEqual(self.queue.size, 0);
 
