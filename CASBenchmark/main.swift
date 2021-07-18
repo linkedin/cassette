@@ -26,4 +26,18 @@ benchmark.addSimple(
     }
 }
 
+benchmark.addSimple(
+  title: "Invoke addElements([value1, ..., valueN]) 1 time",
+  input: [Int].self
+) { input in
+    let uuid = UUID().uuidString
+    let queuePath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(uuid)
+    do {
+        let queue = try CASFileObjectQueue<NSNumber>(absolutePath: queuePath.path)
+        try queue.addElements(input.map { $0 as NSNumber })
+    } catch {
+        fatalError("Could not add elements to queue: \(error)")
+    }
+}
+
 benchmark.main()
