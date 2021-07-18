@@ -28,7 +28,7 @@
     XCTAssertEqual(self.queue.size, 0);
 
     for (NSUInteger i = 0; i < 10; i++) {
-        [self.queue add:@1];
+        XCTAssertTrue([self.queue add:@1 error:NULL]);
     }
 
     XCTAssertEqual(self.queue.size, 10);
@@ -38,30 +38,30 @@
     XCTAssertEqual(self.queue.size, 0);
 
     for (int i = 0; i < 10; i++) {
-        [self.queue add:@1];
+        XCTAssertTrue([self.queue add:@1 error:NULL]);
     }
 
     for (int i = 9; i >= 0; i--) {
-        [self.queue pop];
+        XCTAssertTrue([self.queue pop:1 error:NULL]);
         XCTAssertEqual(self.queue.size, (NSUInteger) i);
     }
 }
 
 - (void)testCorrectElementIsRemovedWhenPopped {
     for (int i = 0; i < 3; i++) {
-        [self.queue add:[NSNumber numberWithInt:i]];
+        XCTAssertTrue([self.queue add:[NSNumber numberWithInt:i] error:NULL]);
     }
 
-    [self.queue pop];
+    XCTAssertTrue([self.queue pop:1 error:NULL]);
 
-    NSArray<NSNumber *> *remainingElements = [self.queue peek:self.queue.size];
+    NSArray<NSNumber *> *remainingElements = [self.queue peek:self.queue.size error:NULL];
     NSArray<NSNumber *> *expected = @[@1, @2];
     XCTAssertEqualObjects(remainingElements, expected);
 }
 
 - (void)testRemoveDoesNothingWhenQueueIsEmpty {
     XCTAssertTrue(self.queue.isEmpty);
-    [self.queue pop:INT_MAX];
+    XCTAssertTrue([self.queue pop:INT_MAX error:NULL]);
     XCTAssertTrue(self.queue.isEmpty);
 }
 
@@ -72,37 +72,37 @@
 
 - (void)testPeekReturnsEmptyArrayWhenQueueIsEmpty {
     XCTAssertTrue(self.queue.isEmpty);
-    XCTAssertNil([self.queue peek]);
+    XCTAssertEqualObjects([self.queue peek:1 error:NULL], @[]);
 }
 
 - (void)testPeekReflectsObjectsAdded {
     NSUInteger amount = 10;
     NSNumber *expectedValue = @1;
     for (NSUInteger i = 0; i < amount; i++) {
-        [self.queue add:expectedValue];
+        XCTAssertTrue([self.queue add:expectedValue error:NULL]);
     }
 
-    NSArray<NSNumber *> *result = [self.queue peek:amount];
+    NSArray<NSNumber *> *result = [self.queue peek:amount error:NULL];
     for (NSUInteger i = 0; i < amount; i++) {
         XCTAssertEqualObjects(result[i], expectedValue);
     }
 }
 
 - (void)testPeekingGreaterThanSizeCapsToSize {
-    [self.queue add:@1];
-    NSArray<id> *result = [self.queue peek:INT_MAX];
+    XCTAssertTrue([self.queue add:@1 error:NULL]);
+    NSArray<id> *result = [self.queue peek:INT_MAX error:NULL];
     XCTAssertEqual(result.count, 1);
 }
 
 - (void)testClearRemovesAllObjects {
     XCTAssertEqual(self.queue.size, 0);
     for (NSUInteger i = 0; i < 1000; i++) {
-        [self.queue add:@1];
+        XCTAssertTrue([self.queue add:@1 error:NULL]);
     }
 
-    [self.queue clear];
+    XCTAssertTrue([self.queue clearAndReturnError:NULL]);
 
-    XCTAssertNil([self.queue peek]);
+    XCTAssertEqualObjects([self.queue peek:1 error:NULL], @[]);
     XCTAssertEqual(self.queue.size, 0);
 }
 

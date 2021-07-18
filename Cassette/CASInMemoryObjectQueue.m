@@ -25,31 +25,33 @@
     return self;
 }
 
-- (void)add:(id)data {
+- (BOOL)add:(id)data error:(NSError * __autoreleasing * _Nullable)error {
     [self.inMemoryStorage addObject:data];
+    return YES;
 }
 
 - (NSUInteger)size {
     return self.inMemoryStorage.count;
 }
 
--(NSArray *)peek:(NSUInteger)amount {
+- (NSArray<id> * _Nullable)peek:(NSUInteger)amount error:(NSError * __autoreleasing * _Nullable)error {
     // Clamp number of elements we read down to the size in case @c amount is larger
     NSUInteger actualAmountToRetrieve = MIN(amount, self.size);
     return [self.inMemoryStorage subarrayWithRange:NSMakeRange(0, actualAmountToRetrieve)];
 }
 
-- (void)pop:(NSUInteger)amount {
+- (BOOL)pop:(NSUInteger)amount error:(NSError * __autoreleasing * _Nullable)error {
     if (amount >= self.size) {
-        [self clear];
-        return;
+        return [self clearAndReturnError:error];
     }
 
     [self.inMemoryStorage removeObjectsInRange:NSMakeRange(0, amount)];
+    return YES;
 }
 
-- (void)clear {
+- (BOOL)clearAndReturnError:(NSError * __autoreleasing * _Nullable)error {
     [self.inMemoryStorage removeAllObjects];
+    return YES;
 }
 
 @end

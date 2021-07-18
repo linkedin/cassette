@@ -51,13 +51,19 @@
     NSString *result = self.inputField.text;
     NSNumber *number = [numberFormatter numberFromString:result];
     if (number != nil) {
-        [self.queue add:number];
+        NSError *error;
+        if (![self.queue add:number error:&error]) {
+            NSLog(@"Failed to add number: %@ error: %@", number, error);
+        }
     }
     [self refreshHeadElementLabel];
 }
 
 - (IBAction)tapPopButton:(__unused id)sender {
-    [self.queue pop];
+    NSError *error;
+    if (![self.queue pop:1 error:&error]) {
+        NSLog(@"Failed to pop, error: %@", error);
+    }
     [self refreshHeadElementLabel];
 }
 
@@ -66,7 +72,12 @@
 }
 
 - (void)refreshHeadElementLabel {
-    NSNumber *number = [self.queue peek];
+    NSError *error;
+    NSArray<NSNumber *> *numbers = [self.queue peek:1 error:&error];
+    if (!numbers) {
+        NSLog(@"Failed to peek, error: %@", error);
+    }
+    NSNumber *number = numbers.firstObject;
     if (number == nil) {
         self.headElementLabel.text = @"empty";
     } else {

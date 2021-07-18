@@ -32,7 +32,7 @@
 
 - (void)tearDown {
     if (self.queueFile != nil) {
-        [self.queueFile clear];
+        XCTAssertTrue([self.queueFile clearAndReturnError:NULL]);
     }
 }
 
@@ -47,7 +47,7 @@
     NSUInteger expected = 10;
 
     for (NSUInteger i = 0; i < expected; i++) {
-        [self.queueFile add:data];
+        XCTAssertTrue([self.queueFile add:data error:NULL]);
     }
 
     XCTAssertEqual(self.queueFile.size, expected);
@@ -61,11 +61,11 @@
     for (NSUInteger i = 0; i < numElements; i++) {
         NSString *stringToStore = [NSString stringWithFormat:expectedFormat, i];
         NSData *data = [stringToStore dataUsingEncoding:NSUTF8StringEncoding];
-        [self.queueFile add:data];
+        XCTAssertTrue([self.queueFile add:data error:NULL]);
     }
 
     // Verify the data
-    NSArray<NSData *> *elements = [self.queueFile peek:numElements];
+    NSArray<NSData *> *elements = [self.queueFile peek:numElements error:NULL];
     XCTAssertEqual(elements.count, numElements);
     for (NSUInteger i = 0; i < numElements; i++) {
         NSData *data = elements[i];
@@ -77,31 +77,31 @@
 
 - (void)testRepeatedPeeksAreConsistent {
     NSData *data = [@"test" dataUsingEncoding:NSUTF8StringEncoding];
-    [self.queueFile add:data];
+    XCTAssertTrue([self.queueFile add:data error:NULL]);
 
-    NSArray<NSData *> *array1 = [self.queueFile peek:1];
-    NSArray<NSData *> *array2 = [self.queueFile peek:1];
+    NSArray<NSData *> *array1 = [self.queueFile peek:1 error:NULL];
+    NSArray<NSData *> *array2 = [self.queueFile peek:1 error:NULL];
 
     XCTAssertEqualObjects(array1, array2);
 }
 
 - (void)testPeekDoesNotChangeSizeState {
     NSData *data = [@"test" dataUsingEncoding:NSUTF8StringEncoding];
-    [self.queueFile add:data];
+    XCTAssertTrue([self.queueFile add:data error:NULL]);
 
     XCTAssertEqual(self.queueFile.size, 1);
-    __unused NSArray<NSData *> *array1 = [self.queueFile peek:1];
+    __unused NSArray<NSData *> *array1 = [self.queueFile peek:1 error:NULL];
     XCTAssertEqual(self.queueFile.size, 1);
 }
 
 - (void)testPeekingGreaterThanSizeIsSafe {
-    NSArray *result = [self.queueFile peek:INT_MAX];
+    NSArray *result = [self.queueFile peek:INT_MAX error:NULL];
     XCTAssertEqual(result.count, 0);
 }
 
 - (void)testPopDoesNothingWhenQueueIsEmpty {
     XCTAssertEqual(self.queueFile.size, 0);
-    [self.queueFile pop:INT_MAX];
+    XCTAssertTrue([self.queueFile pop:INT_MAX error:NULL]);
     XCTAssertEqual(self.queueFile.size, 0);
 }
 
@@ -109,11 +109,11 @@
     NSData *data = [@"test" dataUsingEncoding:NSUTF8StringEncoding];
     NSUInteger numElements = 10;
     for (NSUInteger i = 0; i < numElements; i++) {
-        [self.queueFile add:data];
+        XCTAssertTrue([self.queueFile add:data error:NULL]);
     }
     XCTAssertEqual(self.queueFile.size, numElements);
 
-    [self.queueFile pop:5];
+    XCTAssertTrue([self.queueFile pop:5 error:NULL]);
 
     NSUInteger expected = numElements = 5;
     XCTAssertEqual(self.queueFile.size, expected);
@@ -123,18 +123,19 @@
     NSUInteger numElements = 10;
     for (NSUInteger i = 0; i < numElements; i++) {
         NSData *data = [NSData dataWithBytes:&i length:sizeof(i)];
-        [self.queueFile add:data];
+        XCTAssertTrue([self.queueFile add:data error:NULL]);
     }
 
     // Remove half the queue, to test whether the correct half was removed
     NSUInteger amountToRemove = 5;
-    [self.queueFile pop:amountToRemove];
+    XCTAssertTrue([self.queueFile pop:amountToRemove error:NULL]);
 
     // Verify the data
     NSUInteger expectedAmountRemaining = numElements - amountToRemove;
     XCTAssertEqual(self.queueFile.size, expectedAmountRemaining);
 
-    NSArray<NSData *> *elements = [self.queueFile peek:expectedAmountRemaining];
+    NSArray<NSData *> *elements = [self.queueFile peek:expectedAmountRemaining error:NULL];
+    XCTAssertEqual(elements.count, expectedAmountRemaining);
     for (NSUInteger i = 0; i < elements.count; i++) {
         NSUInteger coercedData;
         [elements[i] getBytes:&coercedData length:sizeof(coercedData)];
@@ -146,7 +147,7 @@
     NSData *data = [NSMutableData dataWithLength:4096];
     NSUInteger numElements = 10;
     for (NSUInteger i = 0; i < numElements; i++) {
-        [self.queueFile add:data];
+        XCTAssertTrue([self.queueFile add:data error:NULL]);
     }
     XCTAssertEqual(self.queueFile.size, numElements);
 }
@@ -161,15 +162,16 @@
     NSUInteger numElements = 10;
     for (NSUInteger i = 0; i < numElements; i++) {
         NSData *data = [NSData dataWithBytes:&i length:sizeof(i)];
-        [self.queueFile add:data];
+        XCTAssertTrue([self.queueFile add:data error:NULL]);
     }
 
     XCTAssertEqual(self.queueFile.size, originalSize + numElements);
 
-    [self.queueFile pop:numElements];
+    XCTAssertTrue([self.queueFile pop:numElements error:NULL]);
     XCTAssertEqual(self.queueFile.size, numElements);
 
-    NSArray<NSData *> *elements = [self.queueFile peek:numElements];
+    NSArray<NSData *> *elements = [self.queueFile peek:numElements error:NULL];
+    XCTAssertEqual(elements.count, numElements);
     for (NSUInteger i = 0; i < elements.count; i++) {
         NSUInteger coercedData;
         [elements[i] getBytes:&coercedData length:sizeof(coercedData)];
@@ -182,7 +184,8 @@
     NSUInteger numElementsToRemove = numElementsToStartWith / 2;
     NSArray<NSData *> * dataArray = [self triggerStressedFragmentation:numElementsToStartWith
                                                    numElementsToRemove:numElementsToRemove];
-    NSArray<NSData *> *elements = [self.queueFile peek:self.queueFile.size];
+    NSArray<NSData *> *elements = [self.queueFile peek:self.queueFile.size error:NULL];
+    XCTAssertEqual(elements.count, self.queueFile.size);
     for (NSUInteger i = 0; i < elements.count; i++) {
         XCTAssertEqualObjects(elements[(i + numElementsToRemove) % numElementsToStartWith],
                               dataArray[i]);
@@ -206,16 +209,16 @@
         for (NSUInteger j = 0; j < sizeOfEachElement; j++) {
             [data appendBytes:&i length:1];
         }
-        [self.queueFile add:data];
+        XCTAssertTrue([self.queueFile add:data error:NULL]);
         [dataArray addObject:data];
     }
 
     // At this point, buffer should be completely full.
     // To trigger fragmentation, let's pop a few elements and add them back in.
     // This will mean the head is now somewhere in the middle of the file, as well as the tail.
-    [self.queueFile pop:numElementsToRemove];
+    XCTAssertTrue([self.queueFile pop:numElementsToRemove error:NULL]);
     for (NSUInteger i = 0; i < numElementsToRemove; i++) {
-        [self.queueFile add:dataArray[i]];
+        XCTAssertTrue([self.queueFile add:dataArray[i] error:NULL]);
     }
 
     return dataArray;

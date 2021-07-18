@@ -36,8 +36,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Adds an element to the end of the queue.
+ *
+ * Please use the API @c add:error: instead.
  */
-- (void)add:(NSData *)data;
+- (void)add:(NSData *)data __attribute__((deprecated("Use -add:error: instead.")));
+
+/**
+ * Adds an element to the end of the queue.
+ * Returns YES on success. On failure, returns NO and sets *error to the error.
+ */
+- (BOOL)add:(NSData *)data error:(NSError * __autoreleasing * _Nullable)error;
 
 /**
  * Returns the number of elements in this queue.
@@ -54,18 +62,46 @@ NS_ASSUME_NONNULL_BEGIN
  * the entries.
  * If the queue's @c size() is less than the amount specified, then only @c size() entries
  * are read.
+ *
+ * Please use the API @c peek:error: instead.
  */
-- (NSArray<NSData *> *)peek:(NSUInteger)amount;
+- (NSArray<NSData *> *)peek:(NSUInteger)amount __attribute__((deprecated("Use peek:error: instead.")));
+
+/**
+ * Reads up to the specified amount of entries from the head of the queue without removing
+ * the entries.
+ * If the queue's @c size() is less than the amount specified, then only @c size() entries
+ * are read.
+ *
+ * Returns the items read on success. On failure, returns nil and sets *error to the error.
+ */
+- (nullable NSArray<NSData *> *)peek:(NSUInteger)amount error:(NSError * __autoreleasing * _Nullable)error;
 
 /**
  * Removes the specified amount of entries from the head of the queue.
+ *
+ * Please use the API @c pop:error: instead.
  */
-- (void)pop:(NSUInteger)amount;
+- (void)pop:(NSUInteger)amount __attribute__((deprecated("Use -pop:error: instead.")));
+
+/**
+ * Removes the specified amount of entries from the head of the queue.
+ * Returns YES on success. On failure, returns NO and sets *error to the error.
+ */
+- (BOOL)pop:(NSUInteger)amount error:(NSError * __autoreleasing * _Nullable)error;
 
 /**
  * Clears this queue. Truncates the file to the initial size.
+ *
+ * Please use the API @c clearAndReturnError: instead.
  */
-- (void)clear;
+- (void)clear __attribute__((deprecated("Use -clearAndReturnError: instead.")));
+
+/**
+ * Clears this queue. Truncates the file to the initial size.
+ * Returns YES on success. On failure, returns NO and sets *error to the error.
+ */
+- (BOOL)clearAndReturnError:(NSError * __autoreleasing * _Nullable)error;
 
 @end
 
