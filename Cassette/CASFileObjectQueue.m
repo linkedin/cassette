@@ -54,21 +54,28 @@
     return self;
 }
 
+- (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error {
+    return [self.queueFile closeAndReturnError:error];
+}
+
 - (NSUInteger)size {
     return self.queueFile.size;
 }
 
-- (BOOL)add:(id)data error:(NSError * __autoreleasing * _Nullable)error {
-    NSData *serializedData = [self.serializer serialize:data error:error];
+- (BOOL)addElements:(NSArray<id> *)elements error:(NSError * __autoreleasing * _Nullable)error {
+    NSMutableArray<NSData *> *serializedElements = [NSMutableArray arrayWithCapacity:elements.count];
+    for (id element in elements) {
+        NSData *serializedData = [self.serializer serialize:element error:error];
 
-    if (!serializedData) {
-        if (error) {
-            CASLOG(@"Error serializing data: %@", *error);
+        if (!serializedData) {
+            if (error) {
+                CASLOG(@"Error serializing data: %@", *error);
+            }
+            return NO;
         }
-        return NO;
-    } else {
-        return [self.queueFile add:serializedData error:error];
+        [serializedElements addObject:serializedData];
     }
+    return [self.queueFile addElements:serializedElements error:error];
 }
 
 - (NSArray<id> * _Nullable)peek:(NSUInteger)amount error:(NSError * __autoreleasing * _Nullable)error {

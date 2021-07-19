@@ -16,14 +16,14 @@
 		264EDF45D9269F4F0075F4F6C9545B71 /* Pods-Cassette.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Cassette.release.xcconfig"; sourceTree = "<group>"; };
 		351B5864A320ACB3940CEC8D76F1A119 /* Pods-Cassette-CassetteTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Cassette-CassetteTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		59C2369F27997C645FF4551643BC1903 /* Pods-Cassette-CassetteTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Cassette-CassetteTests-dummy.m"; sourceTree = "<group>"; };
-		7969EA34025E8D9D6B80A13BF9B437BE /* libPods-Cassette-CassetteTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-Cassette-CassetteTests.a"; path = "libPods-Cassette-CassetteTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7969EA34025E8D9D6B80A13BF9B437BE /* libPods-Cassette-CassetteTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Cassette-CassetteTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E6CF5C0AE55294B72771A70F993D972 /* Pods-Cassette-CassetteTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Cassette-CassetteTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		8183AC2C30EE5EDD7D24FF3EC5A1659C /* Pods-Cassette-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Cassette-acknowledgements.plist"; sourceTree = "<group>"; };
 		87BFD2658CCEE190877A170658216373 /* Pods-Cassette-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Cassette-dummy.m"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B10D9F9AA8EA6437745AA6431FC34A40 /* Pods-Cassette-CassetteTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Cassette-CassetteTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C008AA4A08BCB5F004503C1BB9A37BC3 /* Pods-Cassette-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Cassette-acknowledgements.markdown"; sourceTree = "<group>"; };
-		E9B8597E68390DD9A3FAA147022A0493 /* libPods-Cassette.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-Cassette.a"; path = "libPods-Cassette.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9B8597E68390DD9A3FAA147022A0493 /* libPods-Cassette.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Cassette.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA1533AA2C185C342FE419E2DCF059B4 /* Pods-Cassette-CassetteTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Cassette-CassetteTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -212,6 +212,10 @@
 			baseConfigurationReference = 264EDF45D9269F4F0075F4F6C9545B71 /* Pods-Cassette.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = (
+					x86_64,
+					arm64,
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -224,6 +228,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -256,6 +261,10 @@
 			baseConfigurationReference = 04D608145EFDE30FA9F76EB5C2BAF9FC /* Pods-Cassette.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = (
+					x86_64,
+					arm64,
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -268,6 +277,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -346,8 +356,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};

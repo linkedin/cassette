@@ -14,6 +14,7 @@
 
 @interface CASFileObjectQueueTests : XCTestCase
 
+@property (nonatomic, copy) NSString *queueFileName;
 @property (nonatomic, nonnull, strong) CASFileObjectQueue<NSNumber *> *queue;
 
 @end
@@ -29,20 +30,28 @@
 #pragma mark - setup
 
 - (void)setUp {
-    NSError *error;
-    NSString *testFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"testfile"];
+    // Use a unique filename for each test.
+    self.queueFileName = [NSString stringWithFormat:@"%@/CASFileObjectQueueTests-storage-%@", NSTemporaryDirectory(), [NSUUID UUID].UUIDString];
 
     [[NSFileManager defaultManager] removeItemAtPath:[self defaultWritePath] error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:testFilePath error:nil];
 
-    CASFileObjectQueue<NSNumber *> *queue = [[CASFileObjectQueue alloc] initWithAbsolutePath:testFilePath
-                                                                                       error:&error];
-    XCTAssertNil(error, @"error during setup: %@", error.localizedDescription);
-    self.queue = queue;
+    self.queue = [self openQueue];
+}
+
+- (CASFileObjectQueue<NSNumber *> *)openQueue {
+    NSError *error;
+    CASFileObjectQueue *queueFile = [[CASFileObjectQueue alloc] initWithAbsolutePath:self.queueFileName
+                                                                               error:&error];
+    if (error != nil) {
+        XCTFail(@"CASFileObjectQueue could not be initialized. error: %@", error);
+    }
+    return queueFile;
 }
 
 - (void)tearDown {
     XCTAssertTrue([self.queue clearAndReturnError:NULL]);
+    XCTAssertTrue([self.queue closeAndReturnError:NULL]);
+    [super tearDown];
 }
 
 #pragma mark - tests
@@ -114,6 +123,45 @@
 
         XCTAssertTrue([queue add:@(1) error:NULL]);
     }
+}
+
+- (void)testItemsAddedAreReadBackCorrectly {
+    XCTAssertEqual(self.queue.size, 0);
+    // Add more than 10 items to make sure items of different sizes work.
+    NSUInteger expected = 23;
+
+    NSMutableArray<NSNumber *> *elements = [NSMutableArray array];
+    for (NSUInteger i = 0; i < expected; i++) {
+        XCTAssertTrue([self.queue add:@(i) error:NULL]);
+        [elements addObject:@(i)];
+    }
+
+    // Close and re-open the queue file to make sure its contents are read back correctly.
+    XCTAssertTrue([self.queue closeAndReturnError:NULL]);
+    self.queue = [self openQueue];
+
+    NSArray<NSNumber *> *peekedElements = [self.queue peek:expected error:NULL];
+    XCTAssertEqualObjects(peekedElements, elements);
+}
+
+- (void)testItemsAddedAtomicallyAreReadBackCorrectly {
+    XCTAssertEqual(self.queue.size, 0);
+    // Add more than 10 items to make sure items of different sizes work.
+    NSUInteger expected = 23;
+
+    NSMutableArray<NSNumber *> *elements = [NSMutableArray array];
+    for (NSUInteger i = 0; i < expected; i++) {
+        [elements addObject:@(i)];
+    }
+
+    XCTAssertTrue([self.queue addElements:elements error:NULL]);
+
+    // Close and re-open the queue file to make sure its contents are read back correctly.
+    XCTAssertTrue([self.queue closeAndReturnError:NULL]);
+    self.queue = [self openQueue];
+
+    NSArray<NSNumber *> *peekedElements = [self.queue peek:expected error:NULL];
+    XCTAssertEqualObjects(peekedElements, elements);
 }
 
 - (void)testSizeReflectsObjectsAdded {
