@@ -123,6 +123,26 @@
     XCTAssertEqualObjects(peekedElements, elements);
 }
 
+- (void)testItemsAddedInBatchCanBePoppedCorrectly {
+    XCTAssertEqual(self.queueFile.size, 0);
+    // Add more than 10 items to make sure items of different sizes work.
+    NSUInteger expected = 23;
+    NSMutableArray<NSData *> *elements = [NSMutableArray array];
+    for (NSUInteger i = 0; i < expected; i++) {
+        NSData *data = [[NSString stringWithFormat:@"%zu", i] dataUsingEncoding:NSUTF8StringEncoding];
+        [elements addObject:data];
+    }
+    XCTAssertTrue([self.queueFile addElements:elements error:NULL]);
+    XCTAssertEqual(self.queueFile.size, expected);
+
+    NSUInteger amountToRemove = 3;
+    XCTAssertTrue([self.queueFile pop:amountToRemove error:NULL]);
+
+    XCTAssertEqual(self.queueFile.size, expected - amountToRemove);
+    NSArray<NSData *> *expectedElements = @[[NSData dataWithBytesNoCopy:"3" length:1ULL freeWhenDone:NO]];
+    XCTAssertEqualObjects([self.queueFile peek:1 error:NULL], expectedElements);
+}
+
 - (void)testPeekReflectsItemsAdded {
     NSString *expectedFormat = [NSString stringWithFormat:@"test @d"];
     NSUInteger numElements = 10;

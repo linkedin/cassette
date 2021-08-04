@@ -242,7 +242,7 @@ static NSUInteger const ElementHeaderLength = 4;
     NSUInteger position = wasEmpty ? QueueFileHeaderLength : [self wrapPosition:self.last.position + self.last.length + ElementHeaderLength];
 
     CASQueueFileElement *newFirstElement = nil;
-    CASQueueFileElement *newLastElement = self.last;
+    CASQueueFileElement *newLastElement = nil;
 
     for (NSData *data in elements) {
         newLastElement = [[CASQueueFileElement alloc] initAtPosition:position withLength:data.length];
@@ -264,8 +264,8 @@ static NSUInteger const ElementHeaderLength = 4;
 
     // Commit the addition(s).
     NSUInteger firstPosition = wasEmpty ? newFirstElement.position : self.first.position;
-    if (![self writeHeader:_fileLength
-              elementCount:_elementCount + elements.count
+    if (![self writeHeader:self.fileLength
+              elementCount:self.elementCount + elements.count
              firstPosition:firstPosition
               lastPosition:newLastElement.position
            synchronizeFile:YES
@@ -618,7 +618,8 @@ static NSUInteger const ElementHeaderLength = 4;
  */
 - (BOOL)expandIfNecessary:(NSArray<NSData *> *)elements
                     error:(NSError * __autoreleasing * _Nullable)error {
-    NSUInteger numBytesRequested = ElementHeaderLength;
+    // For each element, reserve 4 bytes to serialize the element's length.
+    NSUInteger numBytesRequested = ElementHeaderLength * elements.count;
     for (NSData *data in elements) {
         numBytesRequested += data.length;
     }
