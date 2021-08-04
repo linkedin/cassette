@@ -14,20 +14,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2D28734F0A99B75BC7591C70F19F30E7"
-               BuildableName = "libPods-Cassette.a"
-               BlueprintName = "Pods-Cassette"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "92FAF8E126A355BE00EF78A7"
                BuildableName = "CASBenchmark"
                BlueprintName = "CASBenchmark"

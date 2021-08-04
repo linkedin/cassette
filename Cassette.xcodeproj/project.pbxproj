@@ -42,7 +42,6 @@
 		92A8FA9E26A3CB6100BE6973 /* Cassette.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E126BF01B1F816200856CCA /* Cassette.framework */; };
 		92FAF8E526A355BE00EF78A7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FAF8E426A355BE00EF78A7 /* main.swift */; };
 		92FAF8EB26A3568700EF78A7 /* CollectionsBenchmark in Frameworks */ = {isa = PBXBuildFile; productRef = 92FAF8EA26A3568700EF78A7 /* CollectionsBenchmark */; };
-		EE307E3EA23ECC9721F5D93A /* libPods-Cassette.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33E401B0C57F6407AB4BA549 /* libPods-Cassette.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,7 +137,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE307E3EA23ECC9721F5D93A /* libPods-Cassette.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
