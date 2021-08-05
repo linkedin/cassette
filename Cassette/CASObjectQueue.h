@@ -62,6 +62,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable T)peek __attribute__((deprecated("Use -peek:error: instead."))) NS_SWIFT_UNAVAILABLE("Not available in Swift");
 
 /**
+ * Returns the head of the queue, or nil if the queue is empty. Does not modify the
+ * queue.
+ */
+- (nullable T)peekWithError:(NSError * __autoreleasing * _Nullable)error NS_SWIFT_NAME(peek());
+
+/**
  * Reads up to the specified amount of entries from the head of the queue without removing
  * the entries.
  * If the queue's @c size() is less than the amount specified, then only @c size() entries

@@ -46,6 +46,10 @@
     return [self peek:1 error:NULL].firstObject;
 }
 
+- (id)peekWithError:(NSError * __autoreleasing * _Nullable)error {
+    return [self peek:1 error:error].firstObject;
+}
+
 - (NSArray<id> *)peek:(NSUInteger)amount {
     return [self peek:amount error:NULL] ?: @[];
 }
