@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  * Closes the queue. Do not use this object after this method returns.
  * Returns YES on success. On failure, returns NO and sets *error to the error.
  */
-- (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error;
+- (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error NS_SWIFT_NAME(close());
 
 /**
  * Adds an element to the end of the queue.
