@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -39,7 +39,9 @@
 		91C04B422677CA8000874F5E /* CASDataSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C04B412677CA8000874F5E /* CASDataSerializer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91C04B482677CB8700874F5E /* CASDefaultDataSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C04B462677CB8700874F5E /* CASDefaultDataSerializer.h */; };
 		91C04B492677CB8700874F5E /* CASDefaultDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C04B472677CB8700874F5E /* CASDefaultDataSerializer.m */; };
-		EE307E3EA23ECC9721F5D93A /* libPods-Cassette.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33E401B0C57F6407AB4BA549 /* libPods-Cassette.a */; };
+		92A8FA9E26A3CB6100BE6973 /* Cassette.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E126BF01B1F816200856CCA /* Cassette.framework */; };
+		92FAF8E526A355BE00EF78A7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FAF8E426A355BE00EF78A7 /* main.swift */; };
+		92FAF8EB26A3568700EF78A7 /* CollectionsBenchmark in Frameworks */ = {isa = PBXBuildFile; productRef = 92FAF8EA26A3568700EF78A7 /* CollectionsBenchmark */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +52,26 @@
 			remoteGlobalIDString = 6E126BEF1B1F816200856CCA;
 			remoteInfo = Cassette;
 		};
+		92A8FA9C26A3CB5C00BE6973 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E126BE71B1F816200856CCA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6E126BEF1B1F816200856CCA;
+			remoteInfo = Cassette;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		92FAF8E026A355BE00EF78A7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0D910F2975ED908A5492A170 /* Pods-Cassette-CassetteTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cassette-CassetteTests.release.xcconfig"; path = "Target Support Files/Pods-Cassette-CassetteTests/Pods-Cassette-CassetteTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -96,6 +117,11 @@
 		91C04B412677CA8000874F5E /* CASDataSerializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CASDataSerializer.h; sourceTree = "<group>"; };
 		91C04B462677CB8700874F5E /* CASDefaultDataSerializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CASDefaultDataSerializer.h; sourceTree = "<group>"; };
 		91C04B472677CB8700874F5E /* CASDefaultDataSerializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASDefaultDataSerializer.m; sourceTree = "<group>"; };
+		92B2FBB426A4BE8500CB50F9 /* run_benchmark.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = run_benchmark.sh; sourceTree = "<group>"; };
+		92FAF8E226A355BE00EF78A7 /* CASBenchmark */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CASBenchmark; sourceTree = BUILT_PRODUCTS_DIR; };
+		92FAF8E426A355BE00EF78A7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		92FAF8F326A3573600EF78A7 /* libPods-Cassette.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-Cassette.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		92FAF90626A35F9B00EF78A7 /* Cassette-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cassette-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +137,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE307E3EA23ECC9721F5D93A /* libPods-Cassette.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +146,15 @@
 			files = (
 				6E126BFC1B1F816300856CCA /* Cassette.framework in Frameworks */,
 				00F51DF502CEE37E08D774E7 /* libPods-Cassette-CassetteTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92FAF8DF26A355BE00EF78A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92A8FA9E26A3CB6100BE6973 /* Cassette.framework in Frameworks */,
+				92FAF8EB26A3568700EF78A7 /* CollectionsBenchmark in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +194,7 @@
 				6E126BF21B1F816200856CCA /* Cassette */,
 				6E126BFF1B1F816300856CCA /* CassetteTests */,
 				3C4A838023130A1000D06FAE /* CASSampleApp */,
+				92FAF8E326A355BE00EF78A7 /* CASBenchmark */,
 				6E126BF11B1F816200856CCA /* Products */,
 				E7D1C46B8C435EFD69D05914 /* Pods */,
 				76C6D6DC28656FE1072D5121 /* Frameworks */,
@@ -172,6 +207,7 @@
 				6E126BF01B1F816200856CCA /* Cassette.framework */,
 				6E126BFB1B1F816300856CCA /* CassetteTests.xctest */,
 				3C4A837F23130A1000D06FAE /* CASSampleApp.app */,
+				92FAF8E226A355BE00EF78A7 /* CASBenchmark */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -179,6 +215,7 @@
 		6E126BF21B1F816200856CCA /* Cassette */ = {
 			isa = PBXGroup;
 			children = (
+				92FAF90626A35F9B00EF78A7 /* Cassette-Bridging-Header.h */,
 				6E126BF51B1F816200856CCA /* Cassette.h */,
 				6E126BF31B1F816200856CCA /* Supporting Files */,
 				3C4A83672311DC6E00D06FAE /* CASObjectQueue.h */,
@@ -231,10 +268,20 @@
 		76C6D6DC28656FE1072D5121 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92FAF8F326A3573600EF78A7 /* libPods-Cassette.a */,
 				33E401B0C57F6407AB4BA549 /* libPods-Cassette.a */,
 				11BC2AFE01B19B98289F90B4 /* libPods-Cassette-CassetteTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		92FAF8E326A355BE00EF78A7 /* CASBenchmark */ = {
+			isa = PBXGroup;
+			children = (
+				92FAF8E426A355BE00EF78A7 /* main.swift */,
+				92B2FBB426A4BE8500CB50F9 /* run_benchmark.sh */,
+			);
+			path = CASBenchmark;
 			sourceTree = "<group>";
 		};
 		E7D1C46B8C435EFD69D05914 /* Pods */ = {
@@ -326,12 +373,34 @@
 			productReference = 6E126BFB1B1F816300856CCA /* CassetteTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		92FAF8E126A355BE00EF78A7 /* CASBenchmark */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92FAF8E826A355BE00EF78A7 /* Build configuration list for PBXNativeTarget "CASBenchmark" */;
+			buildPhases = (
+				92FAF8DE26A355BE00EF78A7 /* Sources */,
+				92FAF8DF26A355BE00EF78A7 /* Frameworks */,
+				92FAF8E026A355BE00EF78A7 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				92A8FA9D26A3CB5C00BE6973 /* PBXTargetDependency */,
+			);
+			name = CASBenchmark;
+			packageProductDependencies = (
+				92FAF8EA26A3568700EF78A7 /* CollectionsBenchmark */,
+			);
+			productName = CASBenchmark;
+			productReference = 92FAF8E226A355BE00EF78A7 /* CASBenchmark */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		6E126BE71B1F816200856CCA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = LinkedIn;
 				TargetAttributes = {
@@ -348,6 +417,9 @@
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = 57Y47U492U;
 					};
+					92FAF8E126A355BE00EF78A7 = {
+						CreatedOnToolsVersion = 12.5;
+					};
 				};
 			};
 			buildConfigurationList = 6E126BEA1B1F816200856CCA /* Build configuration list for PBXProject "Cassette" */;
@@ -360,6 +432,9 @@
 				Base,
 			);
 			mainGroup = 6E126BE61B1F816200856CCA;
+			packageReferences = (
+				92FAF8E926A3568700EF78A7 /* XCRemoteSwiftPackageReference "swift-collections-benchmark" */,
+			);
 			productRefGroup = 6E126BF11B1F816200856CCA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -367,6 +442,7 @@
 				6E126BEF1B1F816200856CCA /* Cassette */,
 				6E126BFA1B1F816300856CCA /* CassetteTests */,
 				3C4A837E23130A1000D06FAE /* CASSampleApp */,
+				92FAF8E126A355BE00EF78A7 /* CASBenchmark */,
 			);
 		};
 /* End PBXProject section */
@@ -483,6 +559,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		92FAF8DE26A355BE00EF78A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92FAF8E526A355BE00EF78A7 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -490,6 +574,11 @@
 			isa = PBXTargetDependency;
 			target = 6E126BEF1B1F816200856CCA /* Cassette */;
 			targetProxy = 6E126BFD1B1F816300856CCA /* PBXContainerItemProxy */;
+		};
+		92A8FA9D26A3CB5C00BE6973 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6E126BEF1B1F816200856CCA /* Cassette */;
+			targetProxy = 92A8FA9C26A3CB5C00BE6973 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -522,7 +611,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = CASSampleApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.linkedin.CASSampleApp;
@@ -557,7 +649,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = CASSampleApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.linkedin.CASSampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -607,6 +702,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Cassette-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -648,6 +744,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Cassette-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -659,16 +756,29 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7F66F602AB0D8B57684B1FDD /* Pods-Cassette.debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					arm64,
+					x86_64,
+				);
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Cassette/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.linkedin.Cassette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Cassette/Cassette-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -676,16 +786,29 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 45D76CCD0A76E5C1CCFA8447 /* Pods-Cassette.release.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					arm64,
+					x86_64,
+				);
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Cassette/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.linkedin.Cassette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Cassette/Cassette-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -702,7 +825,11 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = CassetteTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -716,8 +843,83 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = CassetteTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		92FAF8E626A355BE00EF78A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "Cassette/Cassette-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		92FAF8E726A355BE00EF78A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "Cassette/Cassette-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -760,7 +962,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		92FAF8E826A355BE00EF78A7 /* Build configuration list for PBXNativeTarget "CASBenchmark" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92FAF8E626A355BE00EF78A7 /* Debug */,
+				92FAF8E726A355BE00EF78A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		92FAF8E926A3568700EF78A7 /* XCRemoteSwiftPackageReference "swift-collections-benchmark" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections-benchmark";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		92FAF8EA26A3568700EF78A7 /* CollectionsBenchmark */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 92FAF8E926A3568700EF78A7 /* XCRemoteSwiftPackageReference "swift-collections-benchmark" */;
+			productName = CollectionsBenchmark;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6E126BE71B1F816200856CCA /* Project object */;
 }

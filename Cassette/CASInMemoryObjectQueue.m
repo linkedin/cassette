@@ -25,8 +25,13 @@
     return self;
 }
 
-- (BOOL)add:(id)data error:(NSError * __autoreleasing * _Nullable)error {
-    [self.inMemoryStorage addObject:data];
+- (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error {
+    [self.inMemoryStorage removeAllObjects];
+    return YES;
+}
+
+- (BOOL)addElements:(NSArray<id> *)elements error:(__unused NSError * __autoreleasing * _Nullable)error {
+    [self.inMemoryStorage addObjectsFromArray:elements];
     return YES;
 }
 

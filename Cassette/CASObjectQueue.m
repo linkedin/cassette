@@ -12,11 +12,21 @@
 
 @implementation CASObjectQueue
 
+- (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error {
+    [NSException raise:NSInternalInconsistencyException
+                format:@"Must override method '%@' in subclass '%@'", NSStringFromSelector(_cmd), [self class]];
+    return NO;
+}
+
 - (void)add:(id)data {
     [self add:data error:NULL];
 }
 
-- (BOOL)add:(__unused id)data error:(__unused NSError * __autoreleasing * _Nullable)error {
+- (BOOL)add:(id)data error:(NSError * __autoreleasing * _Nullable)error {
+    return [self addElements:@[data] error:error];
+}
+
+- (BOOL)addElements:(__unused NSArray<id> *)elements error:(__unused NSError * __autoreleasing * _Nullable)error {
     [NSException raise:NSInternalInconsistencyException
                 format:@"Must override LITapeObjectQueue method '%@' in subclass '%@'", NSStringFromSelector(_cmd), [self class]];
     return NO;
