@@ -113,7 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
  * Clears this queue. Truncates the file to the initial size.
  * Returns YES on success. On failure, returns NO and sets *error to the error.
  */
-- (BOOL)clearAndReturnError:(NSError * __autoreleasing * _Nullable)error;
+- (BOOL)clearAndReturnError:(NSError * __autoreleasing * _Nullable)error NS_SWIFT_NAME(clear());
 
 @end
 
