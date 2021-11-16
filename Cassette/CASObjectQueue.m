@@ -18,11 +18,11 @@
     return NO;
 }
 
-- (void)add:(id)data {
+- (void)add:(id<NSCoding>)data {
     [self add:data error:NULL];
 }
 
-- (BOOL)add:(id)data error:(NSError * __autoreleasing * _Nullable)error {
+- (BOOL)add:(id<NSCoding>)data error:(NSError * __autoreleasing * _Nullable)error {
     return [self addElements:@[data] error:error];
 }
 
