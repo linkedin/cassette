@@ -13,7 +13,7 @@ Pod::Spec.new do |spec|
   spec.public_header_files = 'Cassette/*.h'
   spec.source_files        = 'Cassette/*.{h,m}'
 
-  spec.ios.deployment_target = '8.0'
+  spec.ios.deployment_target = '9.0'
   spec.osx.deployment_target = '10.11'
 
   spec.requires_arc     = true
