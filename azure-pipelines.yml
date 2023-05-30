@@ -1,11 +1,7 @@
 trigger:
 - master
 
-pr:
-  autoCancel: true
-  branches:
-    include:
-    - master
+pr: none
 
 pool:
   vmImage: macOS-10.15
