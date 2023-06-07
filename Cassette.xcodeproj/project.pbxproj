@@ -36,6 +36,7 @@
 		6E126C031B1F816300856CCA /* CASQueueFileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E126C021B1F816300856CCA /* CASQueueFileTests.m */; };
 		6E126C0E1B1F818100856CCA /* CASQueueFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E126C0C1B1F818100856CCA /* CASQueueFile.h */; };
 		6E126C0F1B1F818100856CCA /* CASQueueFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E126C0D1B1F818100856CCA /* CASQueueFile.m */; };
+		86D0403326BC33D5009A1615 /* CASSwiftChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D0403226BC33D5009A1615 /* CASSwiftChanges.swift */; };
 		91C04B422677CA8000874F5E /* CASDataSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C04B412677CA8000874F5E /* CASDataSerializer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91C04B482677CB8700874F5E /* CASDefaultDataSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C04B462677CB8700874F5E /* CASDefaultDataSerializer.h */; };
 		91C04B492677CB8700874F5E /* CASDefaultDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C04B472677CB8700874F5E /* CASDefaultDataSerializer.m */; };
@@ -114,6 +115,8 @@
 		6E126C0C1B1F818100856CCA /* CASQueueFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CASQueueFile.h; sourceTree = "<group>"; };
 		6E126C0D1B1F818100856CCA /* CASQueueFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CASQueueFile.m; sourceTree = "<group>"; };
 		7F66F602AB0D8B57684B1FDD /* Pods-Cassette.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cassette.debug.xcconfig"; path = "Target Support Files/Pods-Cassette/Pods-Cassette.debug.xcconfig"; sourceTree = "<group>"; };
+		86D0402F26BC338D009A1615 /* CassetteTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CassetteTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		86D0403226BC33D5009A1615 /* CASSwiftChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CASSwiftChanges.swift; sourceTree = "<group>"; };
 		91C04B412677CA8000874F5E /* CASDataSerializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CASDataSerializer.h; sourceTree = "<group>"; };
 		91C04B462677CB8700874F5E /* CASDefaultDataSerializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CASDefaultDataSerializer.h; sourceTree = "<group>"; };
 		91C04B472677CB8700874F5E /* CASDefaultDataSerializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CASDefaultDataSerializer.m; sourceTree = "<group>"; };
@@ -253,6 +256,8 @@
 				6E126C021B1F816300856CCA /* CASQueueFileTests.m */,
 				3C4A836F2311DD4000D06FAE /* CASFileObjectQueueTests.m */,
 				3C4A83792313075000D06FAE /* CASInMemoryObjectQueueTests.m */,
+				86D0403226BC33D5009A1615 /* CASSwiftChanges.swift */,
+				86D0402F26BC338D009A1615 /* CassetteTests-Bridging-Header.h */,
 			);
 			path = CassetteTests;
 			sourceTree = "<group>";
@@ -416,6 +421,7 @@
 					6E126BFA1B1F816300856CCA = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = 57Y47U492U;
+						LastSwiftMigration = 1250;
 					};
 					92FAF8E126A355BE00EF78A7 = {
 						CreatedOnToolsVersion = 12.5;
@@ -554,6 +560,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C4A83702311DD4000D06FAE /* CASFileObjectQueueTests.m in Sources */,
+				86D0403326BC33D5009A1615 /* CASSwiftChanges.swift in Sources */,
 				3C4A837A2313075000D06FAE /* CASInMemoryObjectQueueTests.m in Sources */,
 				6E126C031B1F816300856CCA /* CASQueueFileTests.m in Sources */,
 			);
@@ -818,6 +825,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 20064E82733FF0AC4F765955 /* Pods-Cassette-CassetteTests.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -833,6 +841,9 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "CassetteTests/CassetteTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -840,6 +851,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0D910F2975ED908A5492A170 /* Pods-Cassette-CassetteTests.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -851,6 +863,8 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "CassetteTests/CassetteTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

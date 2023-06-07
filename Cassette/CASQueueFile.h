@@ -38,14 +38,14 @@ NS_ASSUME_NONNULL_BEGIN
  * Closes the queue file. Do not use this object after this method returns.
  * Returns YES on success. On failure, returns NO and sets *error to the error.
  */
-- (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error;
+- (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error NS_SWIFT_NAME(close());
 
 /**
  * Adds an element to the end of the queue.
  *
  * Please use the API @c add:error: instead.
  */
-- (void)add:(NSData *)data __attribute__((deprecated("Use -add:error: instead.")));
+- (void)add:(NSData *)data __attribute__((deprecated("Use -add:error: instead."))) NS_SWIFT_UNAVAILABLE("Not available in Swift");
 
 /**
  * Adds an element to the end of the queue.
@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * Please use the API @c peek:error: instead.
  */
-- (NSArray<NSData *> *)peek:(NSUInteger)amount __attribute__((deprecated("Use peek:error: instead.")));
+- (NSArray<NSData *> *)peek:(NSUInteger)amount __attribute__((deprecated("Use peek:error: instead."))) NS_SWIFT_UNAVAILABLE("Not available in Swift");
 
 /**
  * Reads up to the specified amount of entries from the head of the queue without removing
@@ -94,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * Please use the API @c pop:error: instead.
  */
-- (void)pop:(NSUInteger)amount __attribute__((deprecated("Use -pop:error: instead.")));
+- (void)pop:(NSUInteger)amount __attribute__((deprecated("Use -pop:error: instead."))) NS_SWIFT_UNAVAILABLE("Not available in Swift");
 
 /**
  * Removes the specified amount of entries from the head of the queue.
@@ -107,13 +107,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * Please use the API @c clearAndReturnError: instead.
  */
-- (void)clear __attribute__((deprecated("Use -clearAndReturnError: instead.")));
+- (void)clear __attribute__((deprecated("Use -clearAndReturnError: instead."))) NS_SWIFT_UNAVAILABLE("Not available in Swift");
 
 /**
  * Clears this queue. Truncates the file to the initial size.
  * Returns YES on success. On failure, returns NO and sets *error to the error.
  */
-- (BOOL)clearAndReturnError:(NSError * __autoreleasing * _Nullable)error;
+- (BOOL)clearAndReturnError:(NSError * __autoreleasing * _Nullable)error NS_SWIFT_NAME(clear());
 
 @end
 
