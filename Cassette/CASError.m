@@ -36,6 +36,9 @@ const int CASErrorCode = -7493;
         case CASErrorFileInitialization:
             desc = @"Could not initialize file.";
             break;
+        case CASErrorReadErrorFileTooShort:
+            desc = @"Read error (file too short)";
+            break;
         default:
             desc = @"Unknown Cassette error. Developer likely mistakenly applied this as a Cassette error.";
             break;
