@@ -28,21 +28,13 @@
 }
 
 - (id _Nullable)deserialize:(nonnull NSData *)data error:(NSError * _Nullable __autoreleasing * _Nullable)error {
-    if (@available(iOS 11.0, macOS 10.13, *)) {
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:error];
-        [unarchiver setRequiresSecureCoding:NO];
-        return [unarchiver decodeObjectForKey:NSKeyedArchiveRootObjectKey];
-    } else {
-        return [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    }
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:error];
+    [unarchiver setRequiresSecureCoding:NO];
+    return [unarchiver decodeObjectForKey:NSKeyedArchiveRootObjectKey];
 }
 
 - (NSData * _Nullable)serialize:(nonnull id)object error:(NSError * _Nullable __autoreleasing * _Nullable)error {
-    if (@available(iOS 11.0, macOS 10.13, *)) {
-        return [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:NO error:error];
-    } else {
-        return [NSKeyedArchiver archivedDataWithRootObject:object];
-    }
+    return [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:NO error:error];
 }
 
 @end
