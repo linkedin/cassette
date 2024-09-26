@@ -104,17 +104,12 @@ static NSUInteger const ElementHeaderLength = 4;
     }
     NSData *buffer;
 
-    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-        if (![fileHandle seekToOffset:0 error:error]) {
-            return nil;
-        }
-        buffer = [fileHandle readDataUpToLength:QueueFileHeaderLength error:error];
-        if (!buffer) {
-            return nil;
-        }
-    } else {
-        [fileHandle seekToFileOffset:0];
-        buffer = [fileHandle readDataOfLength:QueueFileHeaderLength];
+    if (![fileHandle seekToOffset:0 error:error]) {
+      return nil;
+    }
+    buffer = [fileHandle readDataUpToLength:QueueFileHeaderLength error:error];
+    if (!buffer) {
+      return nil;
     }
 
     NSUInteger fileLength;
@@ -223,12 +218,7 @@ static NSUInteger const ElementHeaderLength = 4;
 #pragma mark - Public API
 
 - (BOOL)closeAndReturnError:(NSError * __autoreleasing * _Nullable)error {
-    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-        return [self.fileHandle closeAndReturnError:error];
-    } else {
-        [self.fileHandle closeFile];
-        return YES;
-    }
+  return [self.fileHandle closeAndReturnError:error];
 }
 
 - (void)add:(NSData *)data {
@@ -454,43 +444,32 @@ static NSUInteger const ElementHeaderLength = 4;
 
     // Handle the simple case where we don't wrap around
     if (position + count < self.fileLength) {
-        if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-            if (![self.fileHandle seekToOffset:position error:error]) {
-                return nil;
-            }
-            return [self.fileHandle readDataUpToLength:count error:error];
-        } else {
-            [self.fileHandle seekToFileOffset:position];
-            return [self.fileHandle readDataOfLength:count];
-        }
+      if (![self.fileHandle seekToOffset:position error:error]) {
+        return nil;
+      }
+      return [self.fileHandle readDataUpToLength:count error:error];
     }
 
     // The requested read overlaps the EOF, so we need to read through to the EOF, wrap around, and read the remaining bytes
     NSMutableData *buffer = [NSMutableData dataWithCapacity:count];
     NSUInteger numBytesBeforeEOF = self.fileLength - position;
-    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-        if (![self.fileHandle seekToOffset:position error:error]) {
-            return nil;
-        }
-        NSData *dataUntilEOF = [self.fileHandle readDataUpToLength:numBytesBeforeEOF error:error];
-        if (!dataUntilEOF) {
-            return nil;
-        }
-        [buffer appendData:dataUntilEOF];
-        if (![self.fileHandle seekToOffset:QueueFileHeaderLength error:error]) {
-            return nil;
-        }
-        NSData *remainingData = [self.fileHandle readDataUpToLength:count - numBytesBeforeEOF error:error];
-        if (!remainingData) {
-            return nil;
-        }
-        [buffer appendData:remainingData];
-    } else {
-        [self.fileHandle seekToFileOffset:position];
-        [buffer appendData:[self.fileHandle readDataOfLength:numBytesBeforeEOF]];
-        [self.fileHandle seekToFileOffset:QueueFileHeaderLength];
-        [buffer appendData:[self.fileHandle readDataOfLength:count - numBytesBeforeEOF]];
+    if (![self.fileHandle seekToOffset:position error:error]) {
+      return nil;
     }
+    NSData *dataUntilEOF = [self.fileHandle readDataUpToLength:numBytesBeforeEOF error:error];
+    if (!dataUntilEOF) {
+      return nil;
+    }
+    [buffer appendData:dataUntilEOF];
+    if (![self.fileHandle seekToOffset:QueueFileHeaderLength error:error]) {
+      return nil;
+    }
+    NSData *remainingData = [self.fileHandle readDataUpToLength:count - numBytesBeforeEOF
+                                                          error:error];
+    if (!remainingData) {
+      return nil;
+    }
+    [buffer appendData:remainingData];
     return buffer;
 }
 
@@ -506,39 +485,31 @@ static NSUInteger const ElementHeaderLength = 4;
 
     // Handle the simple case where we don't wrap around
     if (position + buffer.length <= self.fileLength) {
-        if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-            if (![self.fileHandle seekToOffset:position error:error]) {
-                return NO;
-            }
-            if (![self.fileHandle writeData:buffer error:error]) {
-                return NO;
-            }
-        } else {
-            [self.fileHandle seekToFileOffset:position];
-            [self.fileHandle writeData:buffer];
-        }
+      if (![self.fileHandle seekToOffset:position error:error]) {
+        return NO;
+      }
+      if (![self.fileHandle writeData:buffer error:error]) {
+        return NO;
+      }
     } else {
         // The write overlaps the EOF.
         // # of bytes to write before the EOF.
         NSUInteger numBytesBeforeEOF = _fileLength - position;
-        if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-            if (![self.fileHandle seekToOffset:position error:error]) {
-                return NO;
-            }
-            if (![self.fileHandle writeData:[buffer subdataWithRange:NSMakeRange(0, numBytesBeforeEOF)] error:error]) {
-                return NO;
-            }
-            if (![self.fileHandle seekToOffset:QueueFileHeaderLength error:error]) {
-                return NO;
-            }
-            if (![self.fileHandle writeData:[buffer subdataWithRange:NSMakeRange(0 + numBytesBeforeEOF, buffer.length - numBytesBeforeEOF)] error:error]) {
-                return NO;
-            }
-        } else {
-            [self.fileHandle seekToFileOffset:position];
-            [self.fileHandle writeData:[buffer subdataWithRange:NSMakeRange(0, numBytesBeforeEOF)]];
-            [self.fileHandle seekToFileOffset:QueueFileHeaderLength];
-            [self.fileHandle writeData:[buffer subdataWithRange:NSMakeRange(0 + numBytesBeforeEOF, buffer.length - numBytesBeforeEOF)]];
+        if (![self.fileHandle seekToOffset:position error:error]) {
+          return NO;
+        }
+        if (![self.fileHandle writeData:[buffer subdataWithRange:NSMakeRange(0, numBytesBeforeEOF)]
+                                  error:error]) {
+          return NO;
+        }
+        if (![self.fileHandle seekToOffset:QueueFileHeaderLength error:error]) {
+          return NO;
+        }
+        if (![self.fileHandle
+                writeData:[buffer subdataWithRange:NSMakeRange(0 + numBytesBeforeEOF,
+                                                               buffer.length - numBytesBeforeEOF)]
+                    error:error]) {
+          return NO;
         }
     }
 
@@ -589,22 +560,17 @@ static NSUInteger const ElementHeaderLength = 4;
     }
 
     // Write header to file
-    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-        if (![self.fileHandle seekToOffset:0 error:error]) {
-            if (error) {
-                CASLOG(@"Could not seek to beginning of file, error: %@", *error);
-            }
-            return NO;
-        }
-        if (![self.fileHandle writeData:self.buffer error:error]) {
-            if (error) {
-                CASLOG(@"Could not write %zu bytes, error: %@", self.buffer.length, *error);
-            }
-            return NO;
-        }
-    } else {
-        [self.fileHandle seekToFileOffset:0];
-        [self.fileHandle writeData:self.buffer];
+    if (![self.fileHandle seekToOffset:0 error:error]) {
+      if (error) {
+        CASLOG(@"Could not seek to beginning of file, error: %@", *error);
+      }
+      return NO;
+    }
+    if (![self.fileHandle writeData:self.buffer error:error]) {
+      if (error) {
+        CASLOG(@"Could not write %zu bytes, error: %@", self.buffer.length, *error);
+      }
+      return NO;
     }
 
     if (synchronizeFile) {
@@ -674,22 +640,17 @@ static NSUInteger const ElementHeaderLength = 4;
         if (!buffer) {
             return NO;
         }
-        if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-            if (![self.fileHandle seekToOffset:self.fileLength error:error]) {
-                if (error) {
-                    CASLOG(@"Could not seek to offset %zu, error: %@", self.fileLength, *error);
-                }
-                return NO;
-            }
-            if (![self.fileHandle writeData:buffer error:error]) {
-                if (error) {
-                    CASLOG(@"Could not write %zu bytes, error: %@", buffer.length, *error);
-                }
-                return NO;
-            }
-        } else {
-            [self.fileHandle seekToFileOffset:self.fileLength];
-            [self.fileHandle writeData:buffer];
+        if (![self.fileHandle seekToOffset:self.fileLength error:error]) {
+          if (error) {
+            CASLOG(@"Could not seek to offset %zu, error: %@", self.fileLength, *error);
+          }
+          return NO;
+        }
+        if (![self.fileHandle writeData:buffer error:error]) {
+          if (error) {
+            CASLOG(@"Could not write %zu bytes, error: %@", buffer.length, *error);
+          }
+          return NO;
         }
         if (![self ringEraseAtPosition:QueueFileHeaderLength length:count synchronizeFile:NO error:error]) {
             return NO;
@@ -729,16 +690,12 @@ static NSUInteger const ElementHeaderLength = 4;
        toLength:(NSUInteger)newLength
 synchronizeFile:(BOOL)synchronizeFile
           error:(NSError * __autoreleasing * _Nullable)error {
-    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-        if (![fileHandle truncateAtOffset:newLength error:error]) {
-            if (error) {
-                CASLOG(@"Could not truncate to %zu bytes, error: %@", newLength, *error);
-            }
-            return NO;
-        }
-    } else {
-        [fileHandle truncateFileAtOffset:newLength];
+  if (![fileHandle truncateAtOffset:newLength error:error]) {
+    if (error) {
+      CASLOG(@"Could not truncate to %zu bytes, error: %@", newLength, *error);
     }
+    return NO;
+  }
     if (synchronizeFile) {
         return [self synchronizeFile:fileHandle error:error];
     }
@@ -768,16 +725,12 @@ synchronizeFile:(BOOL)synchronizeFile
 }
 
 - (BOOL)synchronizeFile:(NSFileHandle *)file error:(NSError * __autoreleasing * _Nullable)error {
-    if (@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)) {
-        if (![self.fileHandle synchronizeAndReturnError:error]) {
-            if (error) {
-                CASLOG(@"Could not synchronize file, error: %@", *error);
-            }
-            return NO;
-        }
-    } else {
-        [self.fileHandle synchronizeFile];
+  if (![self.fileHandle synchronizeAndReturnError:error]) {
+    if (error) {
+      CASLOG(@"Could not synchronize file, error: %@", *error);
     }
+    return NO;
+  }
     return YES;
 }
 
