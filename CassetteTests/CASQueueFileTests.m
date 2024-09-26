@@ -282,6 +282,40 @@
     }
 }
 
+- (void)testTruncatedFileReturnsError {
+    NSUInteger expected = 23;
+
+    NSError *error;
+    NSMutableArray<NSData *> *elements = [NSMutableArray array];
+    for (NSUInteger i = 0; i < expected; i++) {
+        NSData *data =
+            [[NSString stringWithFormat:@"%zu", i] dataUsingEncoding:NSUTF8StringEncoding];
+        XCTAssertTrue([self.queueFile add:data error:&error], @"Failed to add data: %@", error);
+        [elements addObject:data];
+    }
+
+    // Close and then truncate the queue file (e.g., to simulate an out of disk space error).
+    XCTAssertTrue([self.queueFile closeAndReturnError:&error], @"Failed to close queue file: %@",
+                  error);
+    self.queueFile = nil;
+    NSURL *queueFileURL = [NSURL fileURLWithPath:self.queueFileName];
+    XCTAssertNotNil(queueFileURL);
+    NSFileHandle *queueFileHandle = [NSFileHandle fileHandleForUpdatingURL:queueFileURL
+                                                                     error:&error];
+    XCTAssertNotNil(queueFileHandle, @"Failed to open file at %@ for updating: %@",
+                    self.queueFileName, error);
+    if (@available(iOS 13.0, macOS 10.15, *)) {
+        XCTAssertTrue([queueFileHandle truncateAtOffset:3 error:&error],
+                      @"Failed to truncate %@: %@", queueFileHandle, error);
+    } else {
+        [queueFileHandle truncateFileAtOffset:3];
+    }
+
+    CASQueueFile *queueFile = [CASQueueFile queueFileWithPath:self.queueFileName error:&error];
+    XCTAssertNil(queueFile, @"Re-opening truncated queue file should fail (got %@)", queueFile);
+    XCTAssertNotNil(error, @"Failing to open truncated file should return error");
+}
+
 - (NSMutableArray<NSData *> *)triggerStressedFragmentation:(NSUInteger)numElementsToStartWith
                                        numElementsToRemove:(NSUInteger)numElementsToRemove {
     // Add just enough elements that it almost fills the storage

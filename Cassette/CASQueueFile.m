@@ -117,10 +117,22 @@ static NSUInteger const ElementHeaderLength = 4;
         buffer = [fileHandle readDataOfLength:QueueFileHeaderLength];
     }
 
-    NSUInteger fileLength = readUnsignedInt(buffer, 0);
-    NSUInteger elementCount = readUnsignedInt(buffer, 4);
-    NSUInteger firstObjectOffset = readUnsignedInt(buffer, 8);
-    NSUInteger lastObjectOffset = readUnsignedInt(buffer, 12);
+    NSUInteger fileLength;
+    if (!readUnsignedInt(buffer, 0, &fileLength, error)) {
+        return nil;
+    }
+    NSUInteger elementCount;
+    if (!readUnsignedInt(buffer, 4, &elementCount, error)) {
+        return nil;
+    }
+    NSUInteger firstObjectOffset;
+    if (!readUnsignedInt(buffer, 8, &firstObjectOffset, error)) {
+        return nil;
+    }
+    NSUInteger lastObjectOffset;
+    if (!readUnsignedInt(buffer, 12, &lastObjectOffset, error)) {
+        return nil;
+    }
 
     CASQueueFile *result = [[self alloc] initWithCommitFilePath:commitFilePath
                                                      forManager:fileManager
@@ -351,7 +363,9 @@ static NSUInteger const ElementHeaderLength = 4;
         if (!buffer) {
             return NO;
         }
-        newFirstLength = readUnsignedInt(buffer, 0);
+        if (!readUnsignedInt(buffer, 0, &newFirstLength, error)) {
+            return NO;
+        }
     }
 
     // Commit the header and reassign pertinent in-memory variables
@@ -424,7 +438,10 @@ static NSUInteger const ElementHeaderLength = 4;
     if (!buffer) {
         return nil;
     }
-    NSUInteger length = readUnsignedInt(buffer, 0);
+    NSUInteger length;
+    if (!readUnsignedInt(buffer, 0, &length, error)) {
+        return nil;
+    }
     return [[CASQueueFileElement alloc] initAtPosition:(NSUInteger)position withLength:length];
 }
 
@@ -774,10 +791,20 @@ void writeInt(NSMutableData *buffer, NSUInteger offset, uint32_t value) {
 /**
  * Reads a 32-bit integer value from the @c buffer at @c offset.
  */
-NSUInteger readUnsignedInt(NSData *buffer, NSUInteger offset) {
+BOOL readUnsignedInt(NSData *buffer, NSUInteger offset, NSUInteger *result,
+                     NSError *__autoreleasing *_Nullable error) {
+    NSUInteger lengthNeeded = offset + sizeof(uint32_t);
+    if (buffer.length < lengthNeeded) {
+        NSError *readError = [CASError createError:CASErrorReadErrorFileTooShort];
+        CASLOG(@"Could not read unsigned int at offset %zu (buffer length %zu < length needed %zu)",
+               offset, buffer.length, lengthNeeded);
+        [CASError handleError:readError error:error];
+        return NO;
+    }
     uint32_t value;
     [buffer getBytes:&value range:NSMakeRange(offset, 4)];
-    return value;
+    *result = value;
+    return YES;
 }
 
 NSString *commitFilePathForFile(NSString *file) {

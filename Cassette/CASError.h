@@ -16,7 +16,8 @@ FOUNDATION_EXPORT NSString *const CASErrorDomain;
 FOUNDATION_EXPORT const int CASErrorCode;
 
 typedef NS_ENUM(NSInteger, CASErrorType) {
-    CASErrorFileInitialization
+    CASErrorFileInitialization,
+    CASErrorReadErrorFileTooShort,
 };
 
 @interface CASError : NSObject
